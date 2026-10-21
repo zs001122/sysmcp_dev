@@ -1,6 +1,6 @@
 # BIZ-T100
 
-交付候选 **0.9.2**；现有部署基线 **0.9.1**；文档核对日期：2026-10-08。一个 FastMCP 服务承载员工建档、员工查询、员工资料修改和登录账号维护四个业务工具。MetaMCP 只登记一个 `sysmcp-t100` MCP server，通过两个 namespace／private endpoint 分别开放查询与账号禁用、启用、密码重置。
+当前部署 **0.9.2 固定 wheel**；文档核对日期：2026-10-21。一个 FastMCP 服务承载员工建档、员工查询、员工资料修改和登录账号维护四个业务工具。MetaMCP 只登记一个 `sysmcp-t100` MCP server，通过两个 namespace／private endpoint 分别开放查询与账号禁用、启用、密码重置。
 
 | FastMCP 工具 | T100 接口 | 业务功能 |
 |---|---|---|
@@ -29,7 +29,7 @@ uv sync --locked
 
 ## 常驻服务
 
-现有 0.9.1 部署基线仅有一个 `sysmcp-biz-t100.service`，使用 `server-maintenance.json` 装配四工具。实际可发现工具由主体许可和签名令牌 scope 过滤：本机查询客户端可见员工查询，本机维护客户端当前可见员工更新和账号维护。网关查询与账号 endpoint 通过工具白名单各开放一个工具，不再按功能拆分 MCP server。0.9.2 是未部署候选；本轮不启停服务、修改运行配置或调用真实业务。
+当前 0.9.2 固定部署仅有一个 `sysmcp-biz-t100.service`，使用 `server-maintenance.json` 装配四工具。实际可发现工具由主体许可和签名令牌 scope 过滤：本机查询客户端可见员工查询，本机维护客户端当前可见员工更新和账号维护。网关查询与账号 endpoint 通过工具白名单各开放一个工具，不再按功能拆分 MCP server。服务使用独立的 `.runtime/releases/0.9.2/.venv`，开发与日常脚本仍使用项目 `.venv`。2026-10-21 切换后健康检查、直连和两个网关端点工具发现通过，未执行 T100 业务读写；固定环境安装与回退见 [运行说明](docs/service-runtime.md)，现场证据见 [部署验证](VALIDATION-deployment-20261021.md)。
 
 ```bash
 # 使用查询客户端发现同一个常驻服务的工具，不调用 T100
@@ -59,7 +59,7 @@ uv sync --locked
 | 工具输入输出、四个上游接口字段 | [工具契约](docs/tool-contracts.md)、[上游接口契约](docs/upstream-interfaces.md) |
 | 中文状态、错误判断、审计与未决操作 | [错误码](docs/error-codes.md)、[运维说明](docs/operations.md) |
 | 离线验收、真实身份缺口与发布标准 | [离线验收](docs/offline-acceptance.md)、[集成输入](docs/integration-inputs.md)、[交付说明](docs/service-release.md) |
-| 候选验证及旧阶段来源 | [0.9.2 验证](VALIDATION-v0.9.2.md)、[0.9.1 历史验证](VALIDATION-v0.9.1.md)、[历史文档索引](docs/history/20260930/README.md) |
+| 当前部署、构建与旧阶段来源 | [2026-10-21 部署验证](VALIDATION-deployment-20261021.md)、[0.9.2 构建及离线验证](VALIDATION-v0.9.2.md)、[0.9.1 历史验证](VALIDATION-v0.9.1.md)、[历史文档索引](docs/history/20260930/README.md) |
 
 当前指南以代码、受控配置和对应版本证据为准；旧 `VALIDATION-*`、历史快照与收敛清单只说明当时状态。后续统一维护入口已记录为 [DEC-001](../../docs/项目讨论与决策记录.md)，尚未实现，不能当作现有管理能力。
 

@@ -1,6 +1,6 @@
 # GOV 服务接入规范
 
-更新日期：2026-09-30。选型基线：MetaMCP 2.4.22。BIZ-T100 **0.9.1** 当前由一个 FastMCP 实例和一个 MetaMCP MCP server 登记承载，查询／账号两个 namespace 及 private endpoint 分别暴露对应工具。内部登记和门禁组合已验证，正式个人身份与完整发布验收仍未完成。当前接入见 [查询与账号接入](t100-account-onboarding.md)，运行事实见 [部署记录](../部署记录.md)；[早期只读接入](t100-internal-onboarding.md) 保留为历史。
+更新日期：2026-10-21。选型基线：MetaMCP 2.4.22。BIZ-T100 **0.9.2** 当前由一个 FastMCP 实例和一个 MetaMCP MCP server 登记承载，查询／账号两个 namespace 及 private endpoint 分别暴露对应工具。内部登记和门禁组合已验证，正式个人身份与完整发布验收仍未完成。当前接入见 [查询与账号接入](t100-account-onboarding.md)，运行事实见 [部署记录](../部署记录.md)；[早期只读接入](t100-internal-onboarding.md) 保留为历史。
 
 ## 1. 目的
 
@@ -34,7 +34,7 @@
 
 不得交付上游业务密钥、MetaMCP密钥真值、员工映射、授权允许清单、完整业务响应、业务审计数据库或BIZ源码副本。GOV只保存受控引用和去敏证据。
 
-GOV 入口 Key、BIZ 可信资源身份凭据和上游服务 key 分别归属各层。GOV 所需下游连接令牌只在受控私有运行配置中管理，不写入公开目录；签名私钥、目标许可和上游 key 始终留在 BIZ。
+GOV 入口 Key、BIZ 可信资源身份凭据和上游服务 key 分别归属各层。GOV 所需下游连接令牌只在受控私有运行配置中管理，不写入公开目录；签名私钥、目标许可和上游 key 始终留在 BIZ。连接续签通过 BIZ 明确发布的受控 JWT 文件交接；GOV 不读取 BIZ 运行配置或签名材料。专用同步工具只更新原登记的令牌并回读核验，不构成 catalog 全量下发或统一身份管理。
 
 ## 3. GOV 接入顺序
 
@@ -73,7 +73,7 @@ GOV 入口 Key、BIZ 可信资源身份凭据和上游服务 key 分别归属各
 
 ## 6. T100 当前接入范围
 
-当前 `projects/biz-t100` 0.9.1为一个FastMCP实例，GOV只登记sysmcp-t100一个MCP server。query／account两个namespace及private endpoint分别选择员工查询和账号维护工具；账号禁用、启用、密码重置共用一个工具。工具名使用sysmcp-t100__前缀。原本人服务契约及历史证据保留，不将测试维护主体当真实员工。
+当前 `projects/biz-t100` 0.9.2 固定 wheel 部署为一个 FastMCP 实例，GOV只登记sysmcp-t100一个MCP server。query／account两个namespace及private endpoint分别选择员工查询和账号维护工具；账号禁用、启用、密码重置共用一个工具。工具名使用sysmcp-t100__前缀。原本人服务契约及历史证据保留，不将测试维护主体当真实员工。
 
 实际对象已记录在 `catalog/`，当前状态为 `gov-registered`、`composed`。2.4.22 使用登记的临时连接 JWT，不透传外部用户 JWT；API Key 仅是入口凭据。正式个人身份、端到端用户授权及完整发布条件仍未验收，不能标为 `published` 或 `business-validated`。上游管理员 key、员工范围、授权策略和业务审计留在 BIZ；GOV 只保存去敏登记及组合证据。
 
@@ -82,11 +82,11 @@ GOV 入口 Key、BIZ 可信资源身份凭据和上游服务 key 分别归属各
 | `sysmcp-t100-internal-query` | `sysmcp-t100__t100_employee_query` | 仅批准员工的明确工号查询 |
 | `sysmcp-t100-internal-account` | `sysmcp-t100__t100_account_maintain` | 批准员工／账号配对的禁用、启用及启用状态下重置 |
 
-两个 namespace 共用查询＋限定账号维护的静态内部连接主体及短期 JWT，最长一小时，过期由 BIZ 续签并通过受支持管理界面／API 更新 MetaMCP Bearer token；自动更新工具尚未实现。该连接不代表外部真实员工，也没有员工建档／更新 scope。账号报文 profile 由 BIZ 管理，GOV 仅引用其公开边界，不复制目标名单或业务策略。
+两个 namespace 共用查询＋限定账号维护的静态内部连接主体及短期 JWT，最长一小时，由 BIZ 既有 CLI 签发并通过 GOV 专用工具更新原 MetaMCP Bearer token。两段运维单元和每 20 分钟 timer 已启用，手动及自动轮均验证成功；当前状态见 [续签说明](connector-renewal.md) 和 [运维验证](../VALIDATION-operations-20261021.md)。该连接不代表外部真实员工，也没有员工建档／更新 scope。账号报文 profile 由 BIZ 管理，GOV 仅引用其公开边界，不复制目标名单或业务策略。
 
 现版 MetaMCP Key 属于用户级凭据，不天然绑定某个 endpoint；两个端点分别配置 Key 不构成端点级身份隔离。各 namespace 白名单必须独立核验，跨端点直接调用另一工具应被拒绝；BIZ 仍执行自己的主体、scope 和目标授权。
 
-本版 [0.9.1 验证](../../biz-t100/VALIDATION-v0.9.1.md) 记录 675 项相关离线回归及实际网关门禁，本次 T100 读写均为 0；此前真实查询两跳一致属于 [0.9.0 历史证据](../../biz-t100/VALIDATION-v0.9.0.md)。账号成功回执和用户手测反馈独立保留，实际启停／密码效果通过账号资料或登录确认，不能用员工档案 `status` 代替。
+当前 [2026-10-21 部署验证](../../biz-t100/VALIDATION-deployment-20261021.md) 记录原容器恢复、固定 wheel 部署、两端点发现及实际下游门禁，本次 T100 业务读写均为 0；[0.9.1 验证](../../biz-t100/VALIDATION-v0.9.1.md) 保留 675 项相关离线及历史门禁证据；此前真实查询两跳一致属于 [0.9.0 历史证据](../../biz-t100/VALIDATION-v0.9.0.md)。账号成功回执和用户手测反馈独立保留，实际启停／密码效果通过账号资料或登录确认，不能用员工档案 `status` 代替。
 
 后续统一维护入口见 [DEC-001](../../../docs/项目讨论与决策记录.md)：已确认需求、尚未实现，计划通过公开管理契约分层下发和核验；总览只保存受控引用、配置版本和状态，不把身份映射、业务规则或上游凭据迁入 GOV。
 

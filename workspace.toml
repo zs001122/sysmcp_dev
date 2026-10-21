@@ -1,6 +1,6 @@
 # Project registry only. Each Python project owns its own uv.lock and .venv.
 schema_version = 1
-phase = "02-t100-v092-delivery-candidate-v091-deployed"
+phase = "02-t100-v092-fixed-wheel-deployed-internal-composed"
 
 [architecture]
 gov_product = "metamcp"
@@ -16,6 +16,9 @@ id = "gov"
 path = "projects/gov"
 kind = "product-integration"
 state = "product-running-t100-internal-query-and-account-composed"
+operations_version = "0.1.0"
+operations_guide = "projects/gov/docs/connector-renewal.md"
+operations_evidence = "projects/gov/VALIDATION-operations-20261021.md"
 
 [[projects]]
 id = "core"
@@ -31,9 +34,11 @@ kind = "python-mcp-service"
 state = "biz-validated"
 evidence_scope = "offline-contracts-persistent-http-and-internal-gateway-plus-separate-manual-receipts"
 business_version = "0.9.2"
-deployed_business_version = "0.9.1"
-delivery_state = "candidate-not-deployed"
-validation_scope = "candidate-all-offline-validated-existing-deployment-v091"
+deployed_business_version = "0.9.2"
+delivery_state = "fixed-wheel-deployed-pr-open-formal-review-pending"
+validation_scope = "offline-revalidated-20261021-plus-fixed-wheel-and-tools-discovery"
+deployment_evidence = "projects/biz-t100/VALIDATION-deployment-20261021.md"
+service_environment = "projects/biz-t100/.runtime/releases/0.9.2/.venv"
 development_checklist = "projects/biz-t100/docs/development-checklist.md"
 request_deduplication = "request-id-plus-unknown-target-lock"
 business_idempotency = "pending-design-not-implemented"
@@ -72,6 +77,13 @@ service = "sysmcp-t100"
 query_endpoint = "sysmcp-t100-internal-query"
 account_endpoint = "sysmcp-t100-internal-account"
 process_count = 1
+connector_lifetime_seconds = 3600
+automatic_token_refresh = true
+token_refresh_scope = "registration-and-new-sessions-not-active-session-hot-swap"
+renewal_interval_minutes = 20
+renewal_guide = "projects/gov/docs/connector-renewal.md"
+restart_policy = "unless-stopped"
+user_linger = true
 protocol_profile = "2025-06-18-initialize"
 account_operations = ["disable", "enable", "reset-while-enabled"]
 identity = "temporary-static-connector"

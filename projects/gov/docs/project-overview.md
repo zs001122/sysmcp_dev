@@ -1,6 +1,6 @@
 # GOV 项目梳理与文档索引
 
-核对日期：2026-09-30；产品基线：**MetaMCP 2.4.22**；当前T100制品：**BIZ-T100 0.9.1**。本页说明治理目录、当前登记关系、证据和文档归属，不执行配置发布。业务调用命令统一见 [BIZ测试说明](../../biz-t100/docs/testing.md)。
+核对日期：2026-10-21；产品基线：**MetaMCP 2.4.22**；当前T100固定部署制品：**BIZ-T100 0.9.2**。本页说明治理目录、当前登记关系、证据和文档归属，不执行配置发布。业务调用命令统一见 [BIZ测试说明](../../biz-t100/docs/testing.md)。
 
 ## 责任与管理范围
 
@@ -48,17 +48,19 @@ flowchart LR
 | `catalog/endpoints/` | 两private endpoint的namespace、入口认证开关及私有Key引用 |
 | [environments/internal/t100.toml](../environments/internal/t100.toml) | 当前T100统一运行单元与两个入口的非秘密地址引用 |
 | [旧query服务目录](../catalog/services/sysmcp-t100-internal-query.toml)、[旧query环境](../environments/internal/t100-query.toml) | 0.9.0阶段来源；服务已retired并replaced_by当前登记，环境已标为历史 |
-| `.runtime/` | GOV管理账号、会话、入口Key、实际对象记录；真值不进入公开文档或制品 |
+| `.runtime/` | GOV 管理账号、会话、入口 Key、实际对象、续签私有配置及去敏状态；真值不进入公开文档或制品 |
+| `ops/`、`tests/`、`deploy/` | 专用连接令牌同步工具、独立契约测试、同步 oneshot 与 timer；不是业务测试入口 |
+| `pyproject.toml`、`uv.lock`、`.venv` | GOV 独立标准库运维项目，无第三方依赖，不借用 BIZ 环境或内部源码 |
 | [部署记录](../部署记录.md) | 分阶段说明运行产品、镜像、网络条件、迁移和证据边界 |
 | [历史只读验证](../VALIDATION-internal-t100-20260930.md) | 0.9.0真实只读对照与拒绝证据；原文不追溯改写 |
 
-目录中的9份TOML是产品选型、当前及历史登记描述；现阶段没有自动同步它们到MetaMCP的工具。运行变更使用固定版本已验证的受支持管理界面／API并保存对象ID及结果，不直接修改产品数据库。不同角色的来源不得混用：制品字段引用BIZ发布描述，真实网关对象使用管理记录，验证结论引用对应时点证据。
+目录中的9份TOML是产品选型、当前及历史登记描述；没有全量同步它们到MetaMCP的工具。专用连接维护工具只更新原服务的短期 Bearer token，不创建服务、不改变 namespace 或端点白名单。运行变更使用固定版本已验证的受支持管理界面／API并保存对象ID及结果，不直接修改产品数据库。不同角色的来源不得混用：制品字段引用BIZ发布描述，真实网关对象使用管理记录，验证结论引用对应时点证据。
 
 ## 身份、凭据与协议边界
 
 MetaMCP2.4.22当前不透传外部用户JWT。两个namespace共用查询＋账号维护scope的临时下游连接主体，BIZ验证该主体并继续检查目标许可；它不代表调用网关的真实员工。现版API Key是用户级访问凭据，不天然绑定一个endpoint；分别配置Key不证明员工权限或跨端点身份隔离。
 
-GOV入口／管理凭据、BIZ资源身份令牌、T100管理员服务凭据是三类不同材料。BIZ私钥、员工／账号映射和上游key留BIZ；MetaMCP只保存连接所需短期Bearer Token。下游连接令牌默认且最长一小时，需要BIZ续签后更新统一server已保存的Bearer Token；仅替换本地文件不会使网关自动更新。实际步骤唯一引用 [BIZ运行说明](../../biz-t100/docs/service-runtime.md)，没有自动刷新能力。
+GOV入口／管理凭据、BIZ资源身份令牌、T100管理员服务凭据是三类不同材料。BIZ私钥、员工／账号映射和上游key留BIZ；MetaMCP只保存连接所需短期Bearer Token。下游连接令牌默认且最长一小时，需要BIZ续签后更新统一server已保存的Bearer Token；仅替换本地文件不会使网关自动更新。已启用 BIZ 签发与 GOV 发布两个 oneshot、每 20 分钟 timer，手动首轮和自动轮均成功；GOV 只读 BIZ 专门发布的 JWT 文件。现场启用、最近结果与故障处理见 [续签说明](connector-renewal.md)，签发边界见 [BIZ运行说明](../../biz-t100/docs/service-runtime.md)。
 
 网关兼容链路显式验收 `2025-06-18` initialize，直连BIZ显式验收 `2025-11-25`；不自动回退。原 `2026-07-28` 现代协议目标不能用CORE单组件探针或旧Profile抵扣，保持未验收。
 
@@ -66,11 +68,11 @@ GOV入口／管理凭据、BIZ资源身份令牌、T100管理员服务凭据是�
 
 | 维度 | 证据来源 | 当前结论 |
 |---|---|---|
-| 产品身份 | 2026-09-30部署记录核对2.4.22、revision与应用／数据库digest | 运行身份已记录；Compose浮动引用未完成重部署制品固定 |
-| T100内部登记 | 当前catalog及BIZ0.9.1迁移记录 | `gov-registered`／`composed`，单server、双namespace／endpoint |
+| 产品身份 | 2026-10-21 原应用及数据库镜像不变，Compose 已固定两个 digest | 原容器 restart=unless-stopped，Docker enabled、用户 Linger=yes；未重启机器演练，旧退出原因未确认 |
+| T100内部登记 | 目录已同步 0.9.2 固定 wheel；原 server 与双端点保留，仅更新连接 token | `gov-registered`／`composed`，不提升正式发布状态 |
 | 真实只读对照 | GOV0.9.0验证、BIZ0.9.0验证 | 当时直连与两跳返回一致；历史旧server及prefix后来被替代 |
-| 当前工具与门禁 | [BIZ0.9.1验证](../../biz-t100/VALIDATION-v0.9.1.md) | 两端点发现、跨端点直接调用拒绝、错误Key、工具／服务停用及三类账号确认门禁有证据；该次T100读写为0 |
-| BIZ逻辑 | 0.9.1的675项相关离线回归 | 属于BIZ声明范围，不记成GOV产品测试或本轮新跑结果 |
+| 当前工具与门禁 | [2026-10-21 部署验证](../../biz-t100/VALIDATION-deployment-20261021.md)；[0.9.1 历史验证](../../biz-t100/VALIDATION-v0.9.1.md) | 本次两端点发现、实际下游缺确认拒绝及错误／缺失 Key 拒绝通过，业务读写 0；历史跨端点和启停证据不冒充本次重测 |
+| 各项目逻辑 | 2026-10-21 本地 BIZ 1940／CORE 4／GOV 29 项通过 | 三个项目分别验收；BIZ 原 2026-10-08 结果保留，不能记成 GOV 产品测试 |
 | 真实身份与账号效果 | [BIZ集成输入](../../biz-t100/docs/integration-inputs.md) | 真实个人身份／员工隔离、上游服务认证整改与账号效果仍需独立验收，`business-validated`未签收 |
 | 完整发布 | 上述内部证据与正式准入条件分别核对 | `published`未签收，端点存在与工具发现不自动提升状态 |
 
@@ -85,13 +87,14 @@ GOV入口／管理凭据、BIZ资源身份令牌、T100管理员服务凭据是�
 | GOV总览与当前状态 | [README](../README.md)：补单服务双入口、管理范围限定、目录与状态来源 |
 | 通用交付与接入规则 | [service-onboarding](service-onboarding.md)：区分对象层次，运行单元按经验证的风险与信任边界决定 |
 | 当前查询／账号接入 | [t100-account-onboarding](t100-account-onboarding.md)：明确各endpoint各一工具、三账号动作及身份／Key限制 |
-| 早期只读过程 | [t100-internal-onboarding](t100-internal-onboarding.md)：前置0.9.1导航，原0.9.0过程明确归为历史 |
-| 运行与迁移记录 | [部署记录](../部署记录.md)：按0.9.1、0.9.0、初次核实分阶段，不把旧prefix或只读范围当现状 |
+| 早期只读过程 | [t100-internal-onboarding](t100-internal-onboarding.md)：前置现行 0.9.2 导航，原 0.9.0 过程明确归为历史 |
+| 运行与迁移记录 | [部署记录](../部署记录.md)：新增持续运行与续签阶段，保留早期恢复、0.9.1、0.9.0 及初次核实来源 |
+| 连接令牌维护 | [connector-renewal](connector-renewal.md)、[运维验证](../VALIDATION-operations-20261021.md)：实现与现场状态分开、签发与发布分开 |
 | 业务调用与常驻运维 | [BIZ测试说明](../../biz-t100/docs/testing.md)、[BIZ运行说明](../../biz-t100/docs/service-runtime.md)：只引用唯一指南，不复制出另一套命令 |
 
-本轮更新GOV的README、部署记录及三份接入说明，新增本页；同步根README、STATUS与ADR-004的当前导航和历史范围。9份登记／环境／选型TOML、GOV私有认证资料及历史VALIDATION保持原样；BIZ源码、脚本、文档、制品、许可及审计保持原样。没有管理API变更、实际发布、凭据续签或真实T100调用，原组合与业务证据不因此增加。
+2026-10-21 同步 GOV 当前文档和 sysmcp-t100 制品目录，保留单服务双端点关系。原 MetaMCP 容器已恢复，管理 API 仅更新服务连接令牌，其余字段回读保持；历史 VALIDATION 和制品未改写，BIZ 原许可与审计保留，业务读写 0。现场证据见 [部署验证](../../biz-t100/VALIDATION-deployment-20261021.md)。随后补齐固定 Compose 镜像、原容器重启策略、用户 Linger 和两段续签工具；现场运行与发布结果见 [运维验证](../VALIDATION-operations-20261021.md)，当前状态与到期时间须实时核对。
 
-## 本轮文档核验结果
+## 2026-09-30 历史文档核验结果
 
 | 检查 | 实际结果 |
 |---|---|
@@ -104,4 +107,4 @@ GOV入口／管理凭据、BIZ资源身份令牌、T100管理员服务凭据是�
 | 公开资料 | 核对页面不含本轮已知真实员工工号、姓名、邮箱或电话 |
 | 操作边界 | 管理API调用0，T100读取0、写入0；未重跑工程测试、未构建制品或增加日常脚本 |
 
-本轮检查验证文档、已存登记及证据引用的一致性，没有重新签收运行健康、令牌有效期、业务效果或正式发布。
+上表只记录 2026-09-30 的文档整理，不表示 2026-10-21 的文件集合、元数据及私有资料仍完全相同；本次运行恢复和连接令牌变化另见部署验证。历史检查未签收业务效果或正式发布。

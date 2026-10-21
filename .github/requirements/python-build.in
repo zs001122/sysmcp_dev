@@ -1,0 +1,2 @@
+# Python 3.12 build backend used by the accepted CORE 0.1.0 artifact.
+hatchling==1.32.4

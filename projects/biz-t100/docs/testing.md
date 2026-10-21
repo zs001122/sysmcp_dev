@@ -1,6 +1,6 @@
 # BIZ-T100 测试说明
 
-适用版本 **0.9.2 交付候选**，兼容现有部署 **0.9.1**；核对日期 **2026-10-08**。本页是日常测试命令的唯一指南：`scripts/offline.py` 验证离线逻辑，`scripts/live.py` 测试真实 T100。当前一个常驻 FastMCP 服务承载四接口，直连与 MetaMCP 使用同一组业务请求。
+适用版本及当前固定 wheel 部署 **0.9.2**；核对日期 **2026-10-21**。本页是日常测试命令的唯一指南：`scripts/offline.py` 验证离线逻辑，`scripts/live.py` 测试真实 T100。当前一个常驻 FastMCP 服务承载四接口，直连与 MetaMCP 使用同一组业务请求。
 
 ## 当前可见工具
 
@@ -22,7 +22,7 @@ cd /data/projects/sysmcp_dev/projects/biz-t100
 uv sync --locked
 ```
 
-0.9.2 本机测试使用固定签名主体 `temporary-local-operator`，签名私钥和令牌每次临时生成并原生验签；不把它记为正式个人身份。现有常驻部署仍为 0.9.1，本轮不重启或部署。T100 地址、企业号、服务凭据路径、批准目标范围和审计位置已在私有 `.runtime` 配置；日常无需填写身份令牌、许可摘要、操作编号或幂等键。写操作必须加 `--confirm`。
+0.9.2 本机测试使用固定签名主体 `temporary-local-operator`，签名私钥和令牌每次临时生成并原生验签；不把它记为正式个人身份。常驻服务已使用独立的 `.runtime/releases/0.9.2/.venv` 固定 wheel 环境；下列日常命令仍使用项目 `.venv`，`uv sync` 不会改动常驻安装。T100 地址、企业号、服务凭据路径、批准目标范围和审计位置已在私有 `.runtime` 配置；日常无需填写身份令牌、许可摘要、操作编号或幂等键。写操作必须加 `--confirm`。
 
 | 命令 | 必要业务参数 | 业务对象 |
 |---|---|---|
@@ -87,7 +87,7 @@ uv sync --locked
 
 这三项共用 `t100_account_maintain`，不是三个 MCP server。成功 `acknowledged` 仅证明回执；账号启停及密码效果需账号资料或实际登录验证。重置后的密码规则由 T100 维护方提供，不臆测默认密码。员工新建只有另行批准主体、动作和建档目标后才可见并执行，不能由客户端参数自动开放。
 
-两个本机客户端连接同一常驻地址 `http://172.17.0.1:8781/mcp`，按自身主体和 scope 获得不同工具权限。直连协议默认 `2025-11-25`。MetaMCP 明确指定 `--protocol 2025-06-18`：查询 endpoint 使用 `client-gateway.json`，账号 endpoint 使用 `client-gateway-account.json`，访问 Key 分别配置；现版 Key 为用户级，不宣称天然绑定某一个端点。两个 namespace 引用同一 `sysmcp-t100` MCP server。当前网关调用者身份不透传，不能用该链路验收真实员工身份。启动及连接令牌维护见 [常驻运行说明](service-runtime.md)。所有全局参数放在 `tools` 或业务子命令前。
+两个本机客户端连接同一常驻地址 `http://172.17.0.1:8781/mcp`，按自身主体和 scope 获得不同工具权限。直连协议默认 `2025-11-25`。MetaMCP 明确指定 `--protocol 2025-06-18`：查询 endpoint 使用 `client-gateway.json`，账号 endpoint 使用 `client-gateway-account.json`，访问 Key 分别配置；现版 Key 为用户级，不宣称天然绑定某一个端点。两个 namespace 引用同一 `sysmcp-t100` MCP server。当前网关调用者身份不透传，不能用该链路验收真实员工身份。启动及连接令牌维护见 [常驻运行说明](service-runtime.md)；两段自动续签的当前状态与故障处理见 [GOV 续签说明](../../gov/docs/connector-renewal.md)，日常业务命令不增加令牌操作步骤。所有全局参数放在 `tools` 或业务子命令前。
 
 ## 本机业务参数示例
 
@@ -216,4 +216,4 @@ uv sync --locked
   --request-id 11111111-1111-4111-8111-111111111111
 ```
 
-2026-09-30 用户手测反馈及历史回执见 [收敛验证](../VALIDATION-consolidation-20260930.md)。0.9.2 本轮离线与交付结果见 [候选验证](../VALIDATION-v0.9.2.md)；实际待办只记录在 [开发清单](development-checklist.md)。此前单服务与两个端点的离线／组合证据见 [0.9.1 验证](../VALIDATION-v0.9.1.md)，675 项相关回归是该次既有结果；本次文档更新没有重放真实业务写入。内部临时身份仍标 `real_identity_verified=false`，正式个人身份、`business-validated` 和完整 `published` 分别取证。
+2026-09-30 用户手测反馈及历史回执见 [收敛验证](../VALIDATION-consolidation-20260930.md)。0.9.2 在 2026-10-08 的 1940 项离线与构建结果见 [版本验证](../VALIDATION-v0.9.2.md)；2026-10-21 的固定部署、网关恢复及工具发现见 [部署验证](../VALIDATION-deployment-20261021.md)，本次 T100 业务读写均为 0；后续为交付完整执行 BIZ 1940、CORE 4、GOV 29 项本地离线并均通过，见 [运维验证](../../gov/VALIDATION-operations-20261021.md)，不改写旧版本记录。实际待办只记录在 [开发清单](development-checklist.md)。此前单服务与两个端点的离线／组合证据见 [0.9.1 验证](../VALIDATION-v0.9.1.md)，675 项相关回归是该次既有结果；本次文档更新没有重放真实业务写入。内部临时身份仍标 `real_identity_verified=false`，正式个人身份、`business-validated` 和完整 `published` 分别取证。

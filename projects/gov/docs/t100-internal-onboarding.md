@@ -1,8 +1,8 @@
 # T100 内部查询接入与历史记录
 
-核对日期：**2026-09-30**。当前 BIZ-T100 **0.9.1** 使用一个 FastMCP 实例、一个 MetaMCP `sysmcp-t100` 服务登记，查询与账号维护通过两个 namespace／private endpoint 选择工具。数量仅限本工作空间的 T100 管理对象，不推断网关中 CORE 或其它既有服务的数量。本文先说明当前只读入口，再保留 0.9.0 的独立只读接入过程；两个阶段的登记、工具前缀和验证范围分别处理。
+核对日期：**2026-10-21**。当前 BIZ-T100 **0.9.2 固定 wheel** 使用一个 FastMCP 实例、一个 MetaMCP `sysmcp-t100` 服务登记，查询与账号维护通过两个 namespace／private endpoint 选择工具。数量仅限本工作空间的 T100 管理对象，不推断网关中 CORE 或其它既有服务的数量。本文先说明当前只读入口，再保留 0.9.0 的独立只读接入过程；两个阶段的登记、工具前缀和验证范围分别处理。
 
-## 当前查询入口（0.9.1）
+## 当前查询入口（0.9.2）
 
 | 对象 | 当前值／范围 |
 |---|---|
@@ -20,13 +20,13 @@
 
 当前共享下游客户端为 `metamcp-internal-maintenance`，静态 JWT 有查询和账号维护两个 scope；查询 namespace 只暴露查询工具，账号 namespace 只暴露账号维护。BIZ 原生验签并继续限定各动作及批准目标，白名单不替代业务授权。MetaMCP 2.4.22 不透传外部用户 JWT；GOV 的用户级 API Key 不天然绑定某一个端点，也不是员工身份。输出 `real_identity_verified=false`、`caller_identity_forwarded=false`，不能验收真实员工间隔离。
 
-当前登记状态为 `composed`，`business_validated=false`、`published=false`。0.9.1 已有两个端点发现及跨端点直接调用拒绝等边界证据，见 [BIZ 0.9.1 验证](../../biz-t100/VALIDATION-v0.9.1.md)；真实只读两跳与直连对照来自下文 0.9.0 的历史证据，不将其描述为本次文档同步重新执行。本文仅核对文件和既有证据，没有连接网关或 T100。
+当前登记状态为 `composed`，`business_validated=false`、`published=false`。0.9.1 已有两个端点发现及跨端点直接调用拒绝等边界证据，见 [BIZ 0.9.1 验证](../../biz-t100/VALIDATION-v0.9.1.md)；真实只读两跳与直连对照来自下文 0.9.0 的历史证据，不将其描述为本次文档同步重新执行。2026-10-21 恢复原 MetaMCP 容器并更新原服务连接 token 后，两个端点工具发现通过，查询端点仍只发现上表指定工具；本次没有真实 T100 业务调用，记录见 [部署验证](../../biz-t100/VALIDATION-deployment-20261021.md)。
 
-两个端点共享最长一小时的 BIZ 连接 JWT。续签和统一 server 的 Bearer token 更新步骤见 [BIZ 运行说明](../../biz-t100/docs/service-runtime.md#短期连接令牌维护)，当前没有自动刷新。签名私钥、员工／账号映射、目标许可、T100 key 和业务审计仍归 BIZ；GOV 不保存其副本。总体规则见 [GOV 说明](../README.md) 与 [服务接入规范](service-onboarding.md)。
+两个端点共享最长一小时的 BIZ 连接 JWT。2026-10-21 已实现 BIZ 签发、GOV 通过受支持 API 发布的两段运维工具和 20 分钟 timer；已启用且手动、自动轮均成功，实际结果见 [续签说明](connector-renewal.md) 和 [运维验证](../VALIDATION-operations-20261021.md)。签发边界见 [BIZ 运行说明](../../biz-t100/docs/service-runtime.md#短期连接令牌维护)，使用前核对最近整体成功、实际到期时间及服务配置，不能沿用早期手动令牌时间。签名私钥、员工／账号映射、目标许可、T100 key 和业务审计仍归 BIZ；GOV 不保存其副本。总体规则见 [GOV 说明](../README.md) 与 [服务接入规范](service-onboarding.md)。
 
 ## 历史阶段：0.9.0 独立只读接入
 
-以下段落保留该阶段原始过程，来源为 [0.9.0 去敏验证记录](../VALIDATION-internal-t100-20260930.md) 及 [已退役服务目录](../catalog/services/sysmcp-t100-internal-query.toml)。段落中的“现产品”“当前实际登记”“本次”和只读客户端、UUID、工具前缀，均指 0.9.0 当时情况；“写维护不加入”仅限定当次只读验证，不限制当前账号端点。管理 API 顺序是固定 2.4.22 的历史操作记录，不是要求重新创建现有对象。历史内容不追溯改写成 0.9.1 当前入口。
+以下段落保留该阶段原始过程，来源为 [0.9.0 去敏验证记录](../VALIDATION-internal-t100-20260930.md) 及 [已退役服务目录](../catalog/services/sysmcp-t100-internal-query.toml)。段落中的“现产品”“当前实际登记”“本次”和只读客户端、UUID、工具前缀，均指 0.9.0 当时情况；“写维护不加入”仅限定当次只读验证，不限制当前账号端点。管理 API 顺序是固定 2.4.22 的历史操作记录，不是要求重新创建现有对象。历史内容不追溯改写成当前 0.9.2 入口。
 
 ### 历史运行条件
 

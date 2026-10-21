@@ -1,0 +1,12 @@
+[Unit]
+Description=Refresh the T100 internal MetaMCP connection every twenty minutes
+
+[Timer]
+OnActiveSec=1min
+OnCalendar=*-*-* *:00/20:00
+Persistent=true
+AccuracySec=30s
+Unit=sysmcp-t100-gateway-sync.service
+
+[Install]
+WantedBy=timers.target

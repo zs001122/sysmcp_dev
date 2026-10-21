@@ -1,6 +1,6 @@
 # BIZ-T100 四工具公开契约
 
-适用版本：**0.9.2 交付候选**，兼容部署基线 **0.9.1**；核对日期：2026-10-08。日常命令统一见 [测试说明](testing.md)，上游字段见 [四接口契约](upstream-interfaces.md)，部署及连接令牌维护见 [常驻运行说明](service-runtime.md)。本页描述产品公开能力，实际调用者只能使用已批准的子集。
+适用版本及当前固定 wheel 部署：**0.9.2**；核对日期：2026-10-21。本次部署未改变公开契约。日常命令统一见 [测试说明](testing.md)，上游字段见 [四接口契约](upstream-interfaces.md)，部署及连接令牌维护见 [常驻运行说明](service-runtime.md)。本页描述产品公开能力，实际调用者只能使用已批准的子集。
 
 ## 工具、输入与权限
 
@@ -72,4 +72,4 @@ FastMCP 原生 AuthProvider 验证令牌签名、issuer、audience 与有效期�
 
 MetaMCP 2.4.22 不透传外部调用者 JWT。两个 namespace 共用仅查询＋限定账号维护 scope 的受控静态连接主体，不能代表外部个人。网关 API Key 属于用户级访问凭据，不天然绑定某个 endpoint；各 endpoint 工具白名单和 BIZ 授权分别执行，不能把配置了不同 Key 当成真实员工权限隔离。
 
-原本人查询／重置工厂继续兼容并参与对应离线回归，不是当前四接口常驻服务的日常入口；授权来源仍是可信主体映射，不能与操作员维护身份互换。其旧契约见 [历史快照](history/20260930/tool-contracts.md) 和 [原本人重置说明](password-reset.md)。当前实现及组合证据见 [0.9.1 验证](../VALIDATION-v0.9.1.md)；相关离线通过支持 `biz-validated`，真实身份缺口仍使 `business-validated` 与完整 `published` 未签收。新增系统按独立 BIZ 项目接入。
+原本人查询／重置工厂继续兼容并参与对应离线回归，不是当前四接口常驻服务的日常入口；授权来源仍是可信主体映射，不能与操作员维护身份互换。其旧契约见 [历史快照](history/20260930/tool-contracts.md) 和 [原本人重置说明](password-reset.md)。当前离线及制品见 [0.9.2 验证](../VALIDATION-v0.9.2.md)，现行部署见 [2026-10-21 验证](../VALIDATION-deployment-20261021.md)；[0.9.1 验证](../VALIDATION-v0.9.1.md) 保留为历史接入证据；相关离线通过支持 `biz-validated`，真实身份缺口仍使 `business-validated` 与完整 `published` 未签收。新增系统按独立 BIZ 项目接入。

@@ -1,11 +1,13 @@
-name: CORE and BIZ-T100 offline delivery
+name: SysMCP offline delivery
 
 on:
   pull_request:
     paths:
       - 'projects/core/**'
       - 'projects/biz-t100/**'
+      - 'projects/gov/**'
       - '.github/workflows/biz-t100.yml'
+      - '.github/requirements/**'
       - '.gitignore'
       - 'AGENTS.md'
       - 'docs/代码交付约定.md'
@@ -13,7 +15,9 @@ on:
     paths:
       - 'projects/core/**'
       - 'projects/biz-t100/**'
+      - 'projects/gov/**'
       - '.github/workflows/biz-t100.yml'
+      - '.github/requirements/**'
       - '.gitignore'
       - 'AGENTS.md'
       - 'docs/代码交付约定.md'
@@ -58,7 +62,7 @@ jobs:
           forbidden = []
           paths = subprocess.check_output(['git', 'ls-files', '-z']).decode().split('\0')
           for name in filter(None, paths):
-              if not name.startswith(('projects/core/', 'projects/biz-t100/')):
+              if not name.startswith(('projects/core/', 'projects/biz-t100/', 'projects/gov/')):
                   continue
               path = PurePosixPath(name)
               if '.runtime' in path.parts or '.venv' in path.parts:
@@ -75,21 +79,16 @@ jobs:
               raise SystemExit('Private files must not enter the source delivery.')
           print('Committed source file boundaries passed; no runtime files were read.')
           PY
-      - name: Install and check CORE
-        working-directory: projects/core
+      - name: Check GOV maintenance contracts in its independent environment
+        working-directory: projects/gov
         run: |
           uv sync --locked
           uv pip check
-          uv run --locked ruff check .
-          uv run --locked ruff format --check .
-      - name: Run CORE offline tests
-        working-directory: projects/core
-        run: |
-          uv run --locked pytest -q --junitxml="$RUNNER_TEMP/sysmcp-reports/core.raw.xml"
+          uv run --no-sync python -m unittest discover -s tests -v
       - name: Build CORE wheel before installing BIZ
         working-directory: projects/core
         run: |
-          uv build --wheel
+          uv build --wheel --build-constraints ../../.github/requirements/python-build.txt --require-hashes
           python - <<'PY'
           import hashlib
           import tomllib
@@ -105,20 +104,33 @@ jobs:
           print('Rebuilt CORE wheel matches the BIZ lock SHA-256.')
           PY
           cp dist/sysmcp_core-0.1.0-py3-none-any.whl "$RUNNER_TEMP/sysmcp-artifacts/"
+      - name: Install and check CORE from its wheel
+        working-directory: projects/core
+        run: |
+          uv sync --locked --no-install-project --no-build
+          uv pip install --no-deps --only-binary=:all: dist/sysmcp_core-0.1.0-py3-none-any.whl
+          uv pip check
+          uv run --no-sync ruff check .
+          uv run --no-sync ruff format --check .
+      - name: Run CORE offline tests against its wheel
+        working-directory: projects/core
+        run: |
+          uv run --no-sync pytest -q --junitxml="$RUNNER_TEMP/sysmcp-reports/core.raw.xml"
+      - name: Build BIZ-T100 wheel and source archive with fixed backend
+        working-directory: projects/biz-t100
+        run: |
+          uv build --build-constraints ../../.github/requirements/python-build.txt --require-hashes --out-dir "$RUNNER_TEMP/sysmcp-artifacts"
       - name: Install and check BIZ-T100 with its locked CORE artifact
         working-directory: projects/biz-t100
         run: |
-          uv sync --locked
+          uv sync --locked --no-install-project --no-build
+          uv pip install --no-deps --only-binary=:all: "$RUNNER_TEMP"/sysmcp-artifacts/sysmcp_biz_t100-*.whl
           uv pip check
-          uv run --locked ruff check src scripts tests
+          uv run --no-sync ruff check src scripts tests
       - name: Run complete BIZ-T100 offline tests
         working-directory: projects/biz-t100
         run: |
-          uv run --locked python scripts/offline.py --suite all -- -q --junitxml="$RUNNER_TEMP/sysmcp-reports/biz-t100.raw.xml"
-      - name: Build BIZ-T100 wheel and source archive
-        working-directory: projects/biz-t100
-        run: |
-          uv build --out-dir "$RUNNER_TEMP/sysmcp-artifacts"
+          uv run --no-sync python scripts/offline.py --suite all -- -q --junitxml="$RUNNER_TEMP/sysmcp-reports/biz-t100.raw.xml"
       - name: Verify package boundaries and write checksums
         id: packages
         run: |
