@@ -1,0 +1,29 @@
+schema_version = 1
+checked_on = "2026-09-29"
+status = "selected-for-short-and-medium-term"
+decision_basis = "explicit-user-preference-for-metamcp-simplicity"
+
+[primary]
+product = "MetaMCP"
+version = "2.4.22"
+repository = "https://github.com/metatool-ai/metamcp"
+source_commit = "32b6e9813acfc13d1013eb2452be1899d6654bb9"
+release = "https://github.com/metatool-ai/metamcp/releases/tag/v2.4.22"
+image_tag = "ghcr.io/metatool-ai/metamcp:2.4.22"
+# Product containers already run; actual image identity and pinning remain to be verified.
+# See 部署记录.md; selection metadata is not deployment acceptance evidence.
+
+[future_evaluation]
+product = "ContextForge"
+version_observed = "1.0.11"
+source_commit = "077071bbb43599dd5ab9372ebdbb9a8e686a9816"
+trigger = "a-demonstrated-governance-gap-in-metamcp"
+status = "not-in-current-implementation"
+
+[acceptance]
+gateway_protocol_candidate = "2025-06-18"
+transport = "streamable-http"
+gateway_core_combination = "not-run"
+end_user_identity = "not-run"
+business_authorization = "not-run"
+modern_protocol_gateway = "not-claimed"

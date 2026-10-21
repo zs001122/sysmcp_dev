@@ -1,0 +1,222 @@
+name: CORE and BIZ-T100 offline delivery
+
+on:
+  pull_request:
+    paths:
+      - 'projects/core/**'
+      - 'projects/biz-t100/**'
+      - '.github/workflows/biz-t100.yml'
+      - '.gitignore'
+      - 'AGENTS.md'
+      - 'docs/代码交付约定.md'
+  push:
+    paths:
+      - 'projects/core/**'
+      - 'projects/biz-t100/**'
+      - '.github/workflows/biz-t100.yml'
+      - '.gitignore'
+      - 'AGENTS.md'
+      - 'docs/代码交付约定.md'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: biz-t100-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  offline-delivery:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    defaults:
+      run:
+        shell: bash
+    env:
+      UV_PYTHON_DOWNLOADS: never
+      PIP_DISABLE_PIP_VERSION_CHECK: '1'
+    steps:
+      - name: Check out source without persisted credentials
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+      - name: Set up Python 3.12
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
+        with:
+          python-version: '3.12'
+      - name: Install pinned uv and create temporary output directories
+        run: |
+          python -m pip install 'uv==0.11.26'
+          mkdir -p "$RUNNER_TEMP/sysmcp-artifacts" "$RUNNER_TEMP/sysmcp-reports"
+      - name: Reject committed private runtime and secret files
+        run: |
+          python - <<'PY'
+          import subprocess
+          from pathlib import PurePosixPath
+
+          forbidden = []
+          paths = subprocess.check_output(['git', 'ls-files', '-z']).decode().split('\0')
+          for name in filter(None, paths):
+              if not name.startswith(('projects/core/', 'projects/biz-t100/')):
+                  continue
+              path = PurePosixPath(name)
+              if '.runtime' in path.parts or '.venv' in path.parts:
+                  forbidden.append(('private-directory', name))
+              elif path.suffix.lower() in {'.pem', '.key', '.sqlite', '.sqlite3', '.db', '.docx'}:
+                  forbidden.append(('private-material', name))
+              elif path.name.startswith('.env') and path.name != '.env.example':
+                  forbidden.append(('environment-secret', name))
+              elif '.sqlite' in path.name:
+                  forbidden.append(('audit-journal', name))
+          for category, name in forbidden:
+              print(f'{category}: {name}')
+          if forbidden:
+              raise SystemExit('Private files must not enter the source delivery.')
+          print('Committed source file boundaries passed; no runtime files were read.')
+          PY
+      - name: Install and check CORE
+        working-directory: projects/core
+        run: |
+          uv sync --locked
+          uv pip check
+          uv run --locked ruff check .
+          uv run --locked ruff format --check .
+      - name: Run CORE offline tests
+        working-directory: projects/core
+        run: |
+          uv run --locked pytest -q --junitxml="$RUNNER_TEMP/sysmcp-reports/core.raw.xml"
+      - name: Build CORE wheel before installing BIZ
+        working-directory: projects/core
+        run: |
+          uv build --wheel
+          python - <<'PY'
+          import hashlib
+          import tomllib
+          from pathlib import Path
+
+          lock = tomllib.loads(Path('../biz-t100/uv.lock').read_text())
+          package = next(item for item in lock['package'] if item['name'] == 'sysmcp-core')
+          wheel = Path('../biz-t100') / package['source']['path']
+          expected = package['wheels'][0]['hash']
+          actual = 'sha256:' + hashlib.sha256(wheel.read_bytes()).hexdigest()
+          if actual != expected:
+              raise SystemExit('Rebuilt CORE wheel differs from BIZ lock; review the artifact and lock change explicitly.')
+          print('Rebuilt CORE wheel matches the BIZ lock SHA-256.')
+          PY
+          cp dist/sysmcp_core-0.1.0-py3-none-any.whl "$RUNNER_TEMP/sysmcp-artifacts/"
+      - name: Install and check BIZ-T100 with its locked CORE artifact
+        working-directory: projects/biz-t100
+        run: |
+          uv sync --locked
+          uv pip check
+          uv run --locked ruff check src scripts tests
+      - name: Run complete BIZ-T100 offline tests
+        working-directory: projects/biz-t100
+        run: |
+          uv run --locked python scripts/offline.py --suite all -- -q --junitxml="$RUNNER_TEMP/sysmcp-reports/biz-t100.raw.xml"
+      - name: Build BIZ-T100 wheel and source archive
+        working-directory: projects/biz-t100
+        run: |
+          uv build --out-dir "$RUNNER_TEMP/sysmcp-artifacts"
+      - name: Verify package boundaries and write checksums
+        id: packages
+        run: |
+          python - <<'PY'
+          import hashlib
+          import os
+          import re
+          import tarfile
+          import zipfile
+          from pathlib import Path, PurePosixPath
+
+          output = Path(os.environ['RUNNER_TEMP']) / 'sysmcp-artifacts'
+          artifacts = sorted([*output.glob('*.whl'), *output.glob('*.tar.gz')])
+          if len(artifacts) != 3:
+              raise SystemExit('Expected CORE wheel plus BIZ wheel and source archive.')
+          pem = re.compile(rb'(?m)^-----BEGIN (?:[A-Z]+ )*PRIVATE KEY-----\r?$')
+          jwt = re.compile(rb'(?<![A-Za-z0-9_-])eyJ[A-Za-z0-9_-]{12,}\.[A-Za-z0-9_-]{12,}\.[A-Za-z0-9_-]{12,}(?![A-Za-z0-9_-])')
+          violations = []
+
+          def inspect(artifact, name, data, *, wheel):
+              path = PurePosixPath(name)
+              if path.is_absolute() or '..' in path.parts:
+                  violations.append(('unsafe-path', artifact.name, name))
+              if any(part in {'.runtime', '.venv', '__pycache__', 'dist'} for part in path.parts):
+                  violations.append(('private-or-generated-directory', artifact.name, name))
+              if wheel and any(part in {'tests', 'scripts'} for part in path.parts):
+                  violations.append(('development-code-in-wheel', artifact.name, name))
+              if path.suffix.lower() in {'.pem', '.key', '.sqlite', '.sqlite3', '.db', '.docx'} or '.sqlite' in path.name:
+                  violations.append(('private-material', artifact.name, name))
+              if path.name.startswith('.env') and path.name != '.env.example':
+                  violations.append(('environment-secret', artifact.name, name))
+              if pem.search(data):
+                  violations.append(('private-key-content', artifact.name, name))
+              if jwt.search(data):
+                  violations.append(('encoded-token-content', artifact.name, name))
+
+          for artifact in artifacts:
+              if artifact.suffix == '.whl':
+                  with zipfile.ZipFile(artifact) as archive:
+                      for item in archive.infolist():
+                          if not item.is_dir():
+                              inspect(artifact, item.filename, archive.read(item), wheel=True)
+              else:
+                  with tarfile.open(artifact, 'r:gz') as archive:
+                      for item in archive.getmembers():
+                          if item.issym() or item.islnk():
+                              violations.append(('archive-link', artifact.name, item.name))
+                          elif item.isfile():
+                              stream = archive.extractfile(item)
+                              inspect(artifact, item.name, stream.read(), wheel=False)
+          for category, artifact, name in violations:
+              print(f'{category}: {artifact}/{name}')
+          if violations:
+              raise SystemExit('Package boundary check failed; artifacts will not be uploaded.')
+          lines = [f'{hashlib.sha256(path.read_bytes()).hexdigest()}  {path.name}' for path in artifacts]
+          (output / 'SHA256SUMS').write_text('\n'.join(lines) + '\n')
+          print('Three artifacts passed package boundaries; checksums generated.')
+          PY
+      - name: Produce summary-only JUnit without captured credentials or employee data
+        if: always()
+        run: |
+          python - <<'PY'
+          import os
+          import xml.etree.ElementTree as ET
+          from pathlib import Path
+
+          directory = Path(os.environ['RUNNER_TEMP']) / 'sysmcp-reports'
+          directory.mkdir(parents=True, exist_ok=True)
+          for source in directory.glob('*.raw.xml'):
+              original = ET.parse(source).getroot()
+              result = ET.Element('testsuites')
+              for suite in original.iter('testsuite'):
+                  allowed = {'name', 'tests', 'failures', 'errors', 'skipped', 'time', 'timestamp'}
+                  summary = ET.SubElement(result, 'testsuite', {key: value for key, value in suite.attrib.items() if key in allowed})
+                  for case in suite.findall('testcase'):
+                      attrs = {key: value for key, value in case.attrib.items() if key in {'name', 'classname', 'time'}}
+                      record = ET.SubElement(summary, 'testcase', attrs)
+                      for outcome in case:
+                          if outcome.tag in {'failure', 'error', 'skipped'}:
+                              ET.SubElement(record, outcome.tag, {'message': 'See the restricted CI job log for details.'})
+              destination = directory / source.name.replace('.raw.xml', '.xml')
+              ET.ElementTree(result).write(destination, encoding='utf-8', xml_declaration=True)
+          PY
+      - name: Upload only sanitized offline JUnit summaries
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: sysmcp-offline-results-${{ github.sha }}
+          path: |
+            ${{ runner.temp }}/sysmcp-reports/core.xml
+            ${{ runner.temp }}/sysmcp-reports/biz-t100.xml
+          if-no-files-found: warn
+          retention-days: 14
+      - name: Upload verified packages
+        if: success() && steps.packages.outcome == 'success'
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: sysmcp-packages-${{ github.sha }}
+          path: ${{ runner.temp }}/sysmcp-artifacts/*
+          if-no-files-found: error
+          retention-days: 14

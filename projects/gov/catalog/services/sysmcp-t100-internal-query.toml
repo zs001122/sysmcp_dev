@@ -1,0 +1,25 @@
+logical_id = "sysmcp-t100-internal-query"
+system = "t100"
+owner_project = "projects/biz-t100"
+artifact_name = "sysmcp-biz-t100"
+artifact_version = "0.9.0"
+artifact_sha256 = "dba763224d6f3157a38c0182db1cdad90d94b90c3c84b7064c0fb1c33490829f"
+release_description = "projects/biz-t100/docs/service-release.md"
+metamcp_uuid = "3e121d15-d109-4ebe-81e3-4faff9e89843"
+transport = "STREAMABLE_HTTP"
+protocol_profile = "2025-06-18-initialize"
+environment_ref = "environments/internal/t100-query.toml"
+allowed_tools = ["t100_employee_query"]
+namespace_ref = "catalog/namespaces/sysmcp-t100-internal-query.toml"
+status = "retired"
+replaced_by = "sysmcp-t100"
+retired_reason = "User requested one business MCP server with separate endpoints"
+business_validated = false
+published = false
+identity_mode = "temporary-static-connector"
+external_user_forwarded = false
+connector_lifetime_seconds = 3600
+automatic_token_refresh = false
+evidence_ref = "VALIDATION-internal-t100-20260930.md"
+
+# No upstream credentials, employee scopes, signing keys, or business records here.

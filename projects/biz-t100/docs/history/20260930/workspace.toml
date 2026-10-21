@@ -1,0 +1,81 @@
+# Project registry only. Each Python project owns its own uv.lock and .venv.
+schema_version = 1
+phase = "02-t100-v05-live-read-operator-tests"
+
+[architecture]
+gov_product = "metamcp"
+core_framework = "fastmcp"
+transport = "streamable-http"
+gateway_protocol_candidate = "2025-06-18"
+core_modern_probe_protocol = "2026-07-28"
+protocol_profile = "metamcp-compatibility-not-full-modern-acceptance"
+business_adapter_policy = "one-independent-project-per-business-system"
+
+[[projects]]
+id = "gov"
+path = "projects/gov"
+kind = "product-integration"
+state = "product-running-t100-integration-unvalidated"
+
+[[projects]]
+id = "core"
+path = "projects/core"
+kind = "python-library"
+state = "engineering-foundation"
+
+
+[[projects]]
+id = "biz-t100"
+path = "projects/biz-t100"
+kind = "python-mcp-service"
+state = "biz-validated"
+evidence_scope = "offline-synthetic-identity-mocked-upstream"
+business_validation = "partial-live-single-employee-read"
+gateway_publication = "not-validated"
+auth_mode = "service-account"
+reuse_record = "docs/reuse/RU-001-t100本人档案.md"
+
+[projects.reset_capability]
+state = "biz-validated"
+evidence_scope = "offline-synthetic-candidate-contract"
+live_execution = "blocked-unverified-reset-only-upstream-contract"
+gateway_publication = "not-validated"
+reuse_record = "docs/reuse/RU-003-T100本人密码重置.md"
+
+[projects.internal_test]
+state = "stopped-internal-simulated"
+entry = "projects/biz-t100/scripts/internal_test.py"
+read_endpoint = "http://127.0.0.1:8766/mcp"
+reset_endpoint = "http://127.0.0.1:8767/mcp"
+identity = "temporary-local-signed-issuer"
+upstream = "mock-transport-only"
+
+[projects.approved_employee_case]
+state = "stopped-approved-employee-simulated"
+entry = "projects/biz-t100/scripts/employee_case.py"
+read_endpoint = "http://127.0.0.1:8768/mcp"
+identity = "temporary-local-signed-issuer"
+upstream = "mock-transport-only"
+private_configuration = "projects/biz-t100/.runtime/approved-read-case"
+real_identity_verified = false
+reset_enabled = false
+
+[projects.live_read]
+state = "live-single-employee-read-validated"
+entry = "projects/biz-t100/scripts/live_read.py"
+read_endpoint = "http://127.0.0.1:8768/mcp"
+identity = "temporary-local-signed-issuer"
+upstream = "real-t100-http-test"
+private_configuration = "projects/biz-t100/.runtime/live-read"
+real_identity_verified = false
+service_authentication = "failed-invalid-key-accepted"
+reset_enabled = false
+
+[projects.operator_read_test]
+state = "live-positive-and-empty-result-validated"
+entry = "projects/biz-t100/scripts/live_read.py call --employee-no"
+mcp_transport = "in-process-asgi"
+upstream = "real-t100-http-test"
+shared_mapping_mutated = false
+business_version = "0.6.1"
+environment_data = "user-confirmed-same-as-production"

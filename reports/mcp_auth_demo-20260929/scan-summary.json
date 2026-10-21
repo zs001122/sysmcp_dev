@@ -1,0 +1,111 @@
+{
+  "root": "/data/projects/mcp_auth_demo",
+  "head": "d421e11e0c9a120b5c593997333e70babc308c6d",
+  "tracked_files": 1405,
+  "filesystem_entries": 12271,
+  "category_counts": {
+    "local_auxiliary": 1,
+    "private_or_runtime_configuration": 12,
+    "project_asset": 1405,
+    "git_metadata": 1945,
+    "third_party_environment": 8499,
+    "build_artifact": 86,
+    "generated_cache": 323
+  },
+  "top_level": {
+    "(root)": {
+      "entries": 9,
+      "bytes": 29392
+    },
+    "frontend": {
+      "entries": 201,
+      "bytes": 29782832
+    },
+    ".github": {
+      "entries": 1,
+      "bytes": 1175
+    },
+    "docs": {
+      "entries": 769,
+      "bytes": 11063895
+    },
+    ".git": {
+      "entries": 1945,
+      "bytes": 11653833
+    },
+    "config": {
+      "entries": 1,
+      "bytes": 3365
+    },
+    "scripts": {
+      "entries": 290,
+      "bytes": 3051411
+    },
+    "keycloak": {
+      "entries": 14,
+      "bytes": 990762
+    },
+    ".venv": {
+      "entries": 8308,
+      "bytes": 126002540
+    },
+    "build": {
+      "entries": 86,
+      "bytes": 265721
+    },
+    ".codebuddy": {
+      "entries": 1,
+      "bytes": 15597
+    },
+    "tests": {
+      "entries": 369,
+      "bytes": 5970092
+    },
+    "src": {
+      "entries": 224,
+      "bytes": 2188837
+    },
+    "deploy": {
+      "entries": 53,
+      "bytes": 645266
+    }
+  },
+  "project_asset_files_by_area": {
+    "(root)": 8,
+    "frontend": 10,
+    ".github": 1,
+    "docs": 769,
+    "config": 1,
+    "scripts": 207,
+    "keycloak": 3,
+    "tests": 229,
+    "src/mcp_server": 23,
+    "src/audit_contract": 2,
+    "src/adapter_core": 11,
+    "src/access_relations": 6,
+    "src/platform_storage": 82,
+    "deploy": 53
+  },
+  "project_asset_lines_by_area": {
+    "(root)": 427,
+    "frontend": 2880,
+    ".github": 32,
+    "docs": 136204,
+    "config": 124,
+    "scripts": 33565,
+    "keycloak": 3616,
+    "tests": 43461,
+    "src/mcp_server": 3188,
+    "src/audit_contract": 534,
+    "src/adapter_core": 1135,
+    "src/access_relations": 567,
+    "src/platform_storage": 13525,
+    "deploy": 9737
+  },
+  "python_files_parsed": 606,
+  "python_ast_errors": [],
+  "imports": 6898,
+  "scan_policy": "All filesystem entries enumerated without following symlink directories; all tracked regular files hashed and UTF-8 text scanned; Python parsed as AST. Private/runtime files, dependency/cache/git contents only inventoried. No program imports, tests, network or environment changes.",
+  "directory_entries": 1840,
+  "directory_symlinks": 1
+}

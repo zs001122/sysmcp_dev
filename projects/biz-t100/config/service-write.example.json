@@ -1,0 +1,26 @@
+{
+  "mode": "write",
+  "identity": {
+    "issuer": "https://local-t100-maintenance.example.invalid",
+    "audience": "t100-maintenance-write",
+    "allowed_clients": ["local-operator"]
+  },
+  "public_key_file": "/absolute/private/biz-t100/service/public.pem",
+  "t100": {
+    "url": "https://t100.example.invalid/api",
+    "enterprise_id": "SYNTHETIC",
+    "host_product": "TEST",
+    "host_ip": "127.0.0.1",
+    "host_account": "synthetic",
+    "service_ip": "127.0.0.1",
+    "service_id": "synthetic"
+  },
+  "permissions_file": "/absolute/private/biz-t100/service/permissions.json",
+  "credential_file": "/absolute/private/biz-t100/service/t100.key",
+  "audit_path": "/absolute/private/biz-t100/audit/operations.sqlite3",
+  "legacy_write_path": "/absolute/private/biz-t100/legacy/account-write.sqlite3",
+  "evidence_dir": "/absolute/private/biz-t100/service/cases",
+  "host": "127.0.0.1",
+  "port": 8782,
+  "max_in_flight": 4
+}

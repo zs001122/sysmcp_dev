@@ -1,0 +1,76 @@
+{
+  "reason": "Validated scripts/offline.py and scripts/live.py replace daily legacy entries; retained for offline regression.",
+  "original_files": [
+    {
+      "source": "scripts/direct_check.py",
+      "target": "tests/legacy_support/direct_check.py",
+      "original_sha256": "158649c41a8a7013bdee0dd020afb94e929539e8d05b03afba1d90d4d6825751"
+    },
+    {
+      "source": "scripts/direct_reset_check.py",
+      "target": "tests/legacy_support/direct_reset_check.py",
+      "original_sha256": "884623aa790ce8885cc292f02f1c5c2f82b386dc11e5db60e11b7d9b2c24b3ee"
+    },
+    {
+      "source": "scripts/employee_case.py",
+      "target": "tests/legacy_support/employee_case.py",
+      "original_sha256": "0956d0b23004308fa42fcf0ef90959f4d6411fa23cf4326449cc304248865d95"
+    },
+    {
+      "source": "scripts/employee_case_support.py",
+      "target": "tests/legacy_support/employee_case_support.py",
+      "original_sha256": "20b8c9d50436f16e168ac94b549bb8a159fe4fb527aa33a5233c74e379c8a0d5"
+    },
+    {
+      "source": "scripts/internal_client.py",
+      "target": "tests/legacy_support/internal_client.py",
+      "original_sha256": "8ba59dc7ed02d97c64cb52dd6125d9fece7f43fa844e9b6a1d02bf5b11f334d4"
+    },
+    {
+      "source": "scripts/internal_support.py",
+      "target": "tests/legacy_support/internal_support.py",
+      "original_sha256": "2bb19cde6632737d0c8573e8b38f6f0caf82f4f3fc9027ce8c928a719ea149b5"
+    },
+    {
+      "source": "scripts/internal_test.py",
+      "target": "tests/legacy_support/internal_test.py",
+      "original_sha256": "3dd8239b1f60b15b2788d35e02efe2dd4c94cb5f7defb266abf31f4582329c9a"
+    },
+    {
+      "source": "scripts/internal_upstream.py",
+      "target": "tests/legacy_support/internal_upstream.py",
+      "original_sha256": "29219161807b801f4add653604e7c57133a9e1a2b657e6195f2f50a7f962bf56"
+    },
+    {
+      "source": "scripts/live_employee_call.py",
+      "target": "tests/legacy_support/live_employee_call.py",
+      "original_sha256": "259514d94df440180dd7ac4bfe9e689309f0e221eca3ec2c51089db6a9b03486"
+    },
+    {
+      "source": "scripts/live_read.py",
+      "target": "tests/legacy_support/live_read.py",
+      "original_sha256": "2edf3381a8372a802d21fdaba6509d663b79a5f899812b5093eb522052bb28d1"
+    },
+    {
+      "source": "scripts/live_write.py",
+      "target": "tests/legacy_support/live_write.py",
+      "original_sha256": "dcb50bdae8908a466db059d303fda0608ea57d2119bac946b0e5a5628123d329"
+    },
+    {
+      "source": "scripts/live_write_status.py",
+      "target": "tests/legacy_support/live_write_status.py",
+      "original_sha256": "831592b71a7ba292a09f91f9f7169a4401a0ad55a4ac23648b2dfb40dda42175"
+    },
+    {
+      "source": "scripts/test_account_write.sh",
+      "target": "tests/legacy_support/test_account_write.sh.txt",
+      "original_sha256": "232f65aec9ce31ded82c334c4502113de818018fa4a4e86fdec0fab4200e08dd"
+    }
+  ],
+  "adaptations": [
+    "Project-root parent index adjusted for tests/legacy_support depth.",
+    "Automatic __main__ entry blocks removed; test-only main/run functions remain callable by regression tests.",
+    "Historical shell retained verbatim with .txt suffix and no executable permission.",
+    "Existing offline tests point to retained helpers; subprocess tests explicitly invoke their run functions."
+  ]
+}

@@ -1,0 +1,52 @@
+{
+  "enterprise_id": "SYNTHETIC",
+  "upstream_config_digest": "a5a904c046ebdb7cd931ec5d461c7a0395c55e4eb192c90747101fb6433c58af",
+  "principals": [
+    {
+      "issuer": "https://local-t100-maintenance.example.invalid",
+      "subject": "internal-operator",
+      "client_id": "local-operator",
+      "enabled": false,
+      "actions": [
+        "employee_query",
+        "employee_create",
+        "employee_update",
+        "account_maintain"
+      ],
+      "employee_ids": [
+        "E001"
+      ],
+      "account_targets": [
+        {
+          "employee_no": "E001",
+          "account_id": "LOGIN-A"
+        }
+      ],
+      "allow_search": false,
+      "copy_sources": []
+    },
+    {
+      "issuer": "https://local-t100-maintenance.example.invalid",
+      "subject": "internal-gateway-maintenance",
+      "client_id": "metamcp-internal-maintenance",
+      "enabled": false,
+      "actions": [
+        "employee_query",
+        "account_maintain"
+      ],
+      "employee_ids": [
+        "E001"
+      ],
+      "account_targets": [
+        {
+          "employee_no": "E001",
+          "account_id": "LOGIN-A"
+        }
+      ],
+      "allow_search": false,
+      "copy_sources": [],
+      "account_profile": "status-password"
+    }
+  ],
+  "legacy_employee_updates": []
+}

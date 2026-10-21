@@ -1,0 +1,17 @@
+[Unit]
+Description=SysMCP T100 authenticated business MCP service
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=/data/projects/sysmcp_dev/projects/biz-t100
+ExecStart=/data/projects/sysmcp_dev/projects/biz-t100/.runtime/releases/0.9.2/.venv/bin/sysmcp-t100 serve --config /data/projects/sysmcp_dev/projects/biz-t100/.runtime/service/server-maintenance.json
+Environment=PYTHONUNBUFFERED=1
+UMask=0077
+NoNewPrivileges=true
+Restart=on-failure
+RestartSec=3
+TimeoutStopSec=20
+
+[Install]
+WantedBy=default.target

@@ -1,0 +1,16 @@
+{
+  "auth_mode": "service-account",
+  "revision": "example-1",
+  "principals": [
+    {
+      "issuer": "https://identity.example.invalid",
+      "subject": "replace-with-confirmed-subject",
+      "employee_id": "EXAMPLE001",
+      "allowed_clients": ["replace-with-confirmed-client"],
+      "enabled": false,
+      "allow_employee_read": false,
+      "allow_password_reset": false,
+      "t100_account_id": "EXAMPLE-LOGIN"
+    }
+  ]
+}

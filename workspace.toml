@@ -1,0 +1,83 @@
+# Project registry only. Each Python project owns its own uv.lock and .venv.
+schema_version = 1
+phase = "02-t100-v092-delivery-candidate-v091-deployed"
+
+[architecture]
+gov_product = "metamcp"
+core_framework = "fastmcp"
+transport = "streamable-http"
+gateway_protocol_candidate = "2025-06-18"
+core_modern_probe_protocol = "2026-07-28"
+protocol_profile = "metamcp-compatibility-not-full-modern-acceptance"
+business_adapter_policy = "one-independent-project-per-business-system"
+
+[[projects]]
+id = "gov"
+path = "projects/gov"
+kind = "product-integration"
+state = "product-running-t100-internal-query-and-account-composed"
+
+[[projects]]
+id = "core"
+path = "projects/core"
+kind = "python-library"
+state = "engineering-foundation"
+
+
+[[projects]]
+id = "biz-t100"
+path = "projects/biz-t100"
+kind = "python-mcp-service"
+state = "biz-validated"
+evidence_scope = "offline-contracts-persistent-http-and-internal-gateway-plus-separate-manual-receipts"
+business_version = "0.9.2"
+deployed_business_version = "0.9.1"
+delivery_state = "candidate-not-deployed"
+validation_scope = "candidate-all-offline-validated-existing-deployment-v091"
+development_checklist = "projects/biz-t100/docs/development-checklist.md"
+request_deduplication = "request-id-plus-unknown-target-lock"
+business_idempotency = "pending-design-not-implemented"
+business_validation = "formal-identity-chain-not-validated"
+gateway_publication = "internal-composed-formal-publication-not-validated"
+auth_mode = "service-account"
+reuse_record = "docs/reuse/RU-001-t100本人档案.md"
+
+[projects.testing]
+offline_entry = "projects/biz-t100/scripts/offline.py"
+live_entry = "projects/biz-t100/scripts/live.py"
+guide = "projects/biz-t100/docs/testing.md"
+consolidation = "projects/biz-t100/docs/consolidation.md"
+legacy_support = "projects/biz-t100/tests/legacy_support"
+historical_registry = "projects/biz-t100/docs/history/20260930/workspace.toml"
+
+[projects.maintenance]
+state = "core-functions-implemented-user-manual-pass"
+interfaces = ["employee.data.create", "employee.list.data.query.get", "employee.data.update", "user.account.create"]
+mcp_transport = "native-streamable-http-plus-legacy-in-process-asgi"
+identity = "temporary-local-signed-operator"
+upstream = "real-t100-http-test"
+environment_data = "user-confirmed-same-as-production"
+private_configuration = "projects/biz-t100/.runtime/functions"
+upstream_configuration = "projects/biz-t100/.runtime/live-read/runtime.json"
+real_identity_verified = false
+service_authentication = "historical-invalid-key-accepted-remediation-not-validated"
+write_control = "private-action-target-permission-plus-explicit-confirm"
+account_receipts = ["disable-acknowledged", "enable-acknowledged", "reset-while-enabled-acknowledged"]
+manual_feedback = "user-reported-passed-no-issues-2026-09-30"
+automatic_account_effect_verification = false
+reuse_records = ["docs/reuse/RU-005-T100四接口与测试入口收敛.md", "docs/reuse/RU-006-T100已验证脚本与测试许可修正.md"]
+
+[projects.internal_gateway]
+service = "sysmcp-t100"
+query_endpoint = "sysmcp-t100-internal-query"
+account_endpoint = "sysmcp-t100-internal-account"
+process_count = 1
+protocol_profile = "2025-06-18-initialize"
+account_operations = ["disable", "enable", "reset-while-enabled"]
+identity = "temporary-static-connector"
+real_identity_verified = false
+external_user_forwarded = false
+account_profile = "status-password"
+published = false
+guide = "projects/biz-t100/docs/service-runtime.md"
+decision = "docs/架构决策-009-T100账号操作网关接入.md"

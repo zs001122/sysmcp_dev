@@ -1,0 +1,10 @@
+{
+  "employee": [
+    {
+      "employee_no": "E001",
+      "full_name": "Synthetic Employee",
+      "department_no": "DEPT-A",
+      "status": "Y"
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+# Each project owns its own environment and build output.
+**/.venv/
+**/__pycache__/
+**/*.py[cod]
+**/.pytest_cache/
+**/.ruff_cache/
+**/dist/
+**/build/
+**/*.egg-info/
+.cache/
+.runtime/
+**/.env
+**/.env.*
+!**/.env.example
+**/*.pem
+**/*.key
+**/coverage.xml
+**/.coverage
+
+# Business runtime journals never belong in the source tree.
+**/*.sqlite
+**/*.sqlite3
+**/*.sqlite3-*

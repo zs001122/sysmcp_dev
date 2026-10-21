@@ -1,0 +1,259 @@
+{
+  "date": "2026-09-30",
+  "business_version": "0.8.4",
+  "status": "consolidated",
+  "daily_entries": [
+    {
+      "path": "scripts/offline.py",
+      "sha256": "48fdaa2f83453470c9ea2e4ac01f48ba23e4cd7f8fd017866648467c5f91589b"
+    },
+    {
+      "path": "scripts/live.py",
+      "sha256": "4eae7db1132871ff6f396519252e5b7155d6031b2aaee60c45fb65f8cf7be770"
+    }
+  ],
+  "legacy_scripts": [
+    {
+      "source": "scripts/direct_check.py",
+      "target": "tests/legacy_support/direct_check.py",
+      "original_sha256": "158649c41a8a7013bdee0dd020afb94e929539e8d05b03afba1d90d4d6825751",
+      "current_sha256": "1b80e608ee6d01151a386cb44a252209a6882113a6e0c5a31fba0b09b926ea3c"
+    },
+    {
+      "source": "scripts/direct_reset_check.py",
+      "target": "tests/legacy_support/direct_reset_check.py",
+      "original_sha256": "884623aa790ce8885cc292f02f1c5c2f82b386dc11e5db60e11b7d9b2c24b3ee",
+      "current_sha256": "dd2dcb07a687f5e563c6230b4a3a2c62e79a132ce43c74cfbe74fde6bd5414b7"
+    },
+    {
+      "source": "scripts/employee_case.py",
+      "target": "tests/legacy_support/employee_case.py",
+      "original_sha256": "0956d0b23004308fa42fcf0ef90959f4d6411fa23cf4326449cc304248865d95",
+      "current_sha256": "aeca9412818ff7809aad141dad1110016966b97f4e4dba2a0c711c1ced054971"
+    },
+    {
+      "source": "scripts/employee_case_support.py",
+      "target": "tests/legacy_support/employee_case_support.py",
+      "original_sha256": "20b8c9d50436f16e168ac94b549bb8a159fe4fb527aa33a5233c74e379c8a0d5",
+      "current_sha256": "b740e69e63d8c2ef25e6268d3aae0b81f775b81e59e716c11b749247e9038108"
+    },
+    {
+      "source": "scripts/internal_client.py",
+      "target": "tests/legacy_support/internal_client.py",
+      "original_sha256": "8ba59dc7ed02d97c64cb52dd6125d9fece7f43fa844e9b6a1d02bf5b11f334d4",
+      "current_sha256": "506cb6f23989ce8a01c7e3db6424ab72d29c94b13bd22e6b3587317991fced7e"
+    },
+    {
+      "source": "scripts/internal_support.py",
+      "target": "tests/legacy_support/internal_support.py",
+      "original_sha256": "2bb19cde6632737d0c8573e8b38f6f0caf82f4f3fc9027ce8c928a719ea149b5",
+      "current_sha256": "0d78f0cd96d3635108f192b862c40555c63e26b05c2f3742e8b933f276cdf03f"
+    },
+    {
+      "source": "scripts/internal_test.py",
+      "target": "tests/legacy_support/internal_test.py",
+      "original_sha256": "3dd8239b1f60b15b2788d35e02efe2dd4c94cb5f7defb266abf31f4582329c9a",
+      "current_sha256": "aef54a0d771b45eac0cb024914cd0d256ef03ac30e33a986974ed00ecc42e88b"
+    },
+    {
+      "source": "scripts/internal_upstream.py",
+      "target": "tests/legacy_support/internal_upstream.py",
+      "original_sha256": "29219161807b801f4add653604e7c57133a9e1a2b657e6195f2f50a7f962bf56",
+      "current_sha256": "3fc45571ec9c03eb5476ae65d4eb5f998384885d4c84902409700fd003012d5f"
+    },
+    {
+      "source": "scripts/live_employee_call.py",
+      "target": "tests/legacy_support/live_employee_call.py",
+      "original_sha256": "259514d94df440180dd7ac4bfe9e689309f0e221eca3ec2c51089db6a9b03486",
+      "current_sha256": "6ca7d1e793988081303e75985d44cf2fb7607d4713380540f95747b29c2bee32"
+    },
+    {
+      "source": "scripts/live_read.py",
+      "target": "tests/legacy_support/live_read.py",
+      "original_sha256": "2edf3381a8372a802d21fdaba6509d663b79a5f899812b5093eb522052bb28d1",
+      "current_sha256": "14037d2d6d5f5a8895e2fd5a8dedf2c4df4eb111e84c7b88b6a5ebfe0cf116e2"
+    },
+    {
+      "source": "scripts/live_write.py",
+      "target": "tests/legacy_support/live_write.py",
+      "original_sha256": "dcb50bdae8908a466db059d303fda0608ea57d2119bac946b0e5a5628123d329",
+      "current_sha256": "9c9e75c66ddfa174a2e816768a9f3f8ae4425cad621bec05dcf53e41f68594c5"
+    },
+    {
+      "source": "scripts/live_write_status.py",
+      "target": "tests/legacy_support/live_write_status.py",
+      "original_sha256": "831592b71a7ba292a09f91f9f7169a4401a0ad55a4ac23648b2dfb40dda42175",
+      "current_sha256": "ec3b5f79bab9f3177faa722fb4a15f4f6c72f5b60c3855a79cfb1eb156db68c8"
+    },
+    {
+      "source": "scripts/test_account_write.sh",
+      "target": "tests/legacy_support/test_account_write.sh.txt",
+      "original_sha256": "232f65aec9ce31ded82c334c4502113de818018fa4a4e86fdec0fab4200e08dd",
+      "current_sha256": "232f65aec9ce31ded82c334c4502113de818018fa4a4e86fdec0fab4200e08dd"
+    }
+  ],
+  "document_archive": [
+    {
+      "source": "projects/biz-t100/docs/direct-check.md",
+      "archive": "projects/biz-t100/docs/history/20260930/direct-check.md",
+      "original_sha256": "306b1ad6b49bc800e21b47f4df5cd26f635e7a7141c6836142d5e5a371896863",
+      "archive_sha256": "5f32ffe016535b6a85a7979962aaf1e0ac346612baaa4d88ca51aba4a314db15",
+      "adaptation": "relative Markdown links rebased; retired script links refer to regression source; historical command text unchanged"
+    },
+    {
+      "source": "projects/biz-t100/docs/internal-test.md",
+      "archive": "projects/biz-t100/docs/history/20260930/internal-test.md",
+      "original_sha256": "66c5a42f0d690eac7174487a7badf73a1d96fc8d20d424b991e4991268daa4d9",
+      "archive_sha256": "71f33cce5fce2c310d2f877e5983ee725a852cffeff7255e4370b4efbc801cab",
+      "adaptation": "relative Markdown links rebased; retired script links refer to regression source; historical command text unchanged"
+    },
+    {
+      "source": "projects/biz-t100/docs/approved-employee-case.md",
+      "archive": "projects/biz-t100/docs/history/20260930/approved-employee-case.md",
+      "original_sha256": "cb52fd8aaac500b0c162cdd545f97b06224ee210291f0f214384db26a1b78579",
+      "archive_sha256": "ca408a7868d433a455635fc86a178890b7dac973c199ffc80520d14b0825adb0",
+      "adaptation": "relative Markdown links rebased; retired script links refer to regression source; historical command text unchanged"
+    },
+    {
+      "source": "projects/biz-t100/docs/live-read.md",
+      "archive": "projects/biz-t100/docs/history/20260930/live-read.md",
+      "original_sha256": "b982ce6284193ee102e79d8c6f441dfeb16d5917708329523fee6d090a566685",
+      "archive_sha256": "476622da6f4ba994476a3a01db38fb0e4aa82df2ba5b907bbdb5f715f9aab14a",
+      "adaptation": "relative Markdown links rebased; retired script links refer to regression source; historical command text unchanged"
+    },
+    {
+      "source": "projects/biz-t100/docs/live-write.md",
+      "archive": "projects/biz-t100/docs/history/20260930/live-write.md",
+      "original_sha256": "1a74701082368d954d114118cca322b69d0345dbdc9fabc7efc6d13744a70d2f",
+      "archive_sha256": "e8015b30f0f33c78ec4eaafa81277e876da0e8466a36df9680eee4a1a2999b95",
+      "adaptation": "relative Markdown links rebased; retired script links refer to regression source; historical command text unchanged"
+    },
+    {
+      "source": "projects/biz-t100/docs/password-reset.md",
+      "archive": "projects/biz-t100/docs/history/20260930/password-reset.md",
+      "original_sha256": "0700c8c913eec796ac7831f991eadd82dd47aa66e2e470183a44efbe9140acbb",
+      "archive_sha256": "46ca5c5678b13c28a4c4175e19560c9e5a430f65d2bb7d8c4010d0497b35ef5b",
+      "adaptation": "relative Markdown links rebased; retired script links refer to regression source; historical command text unchanged"
+    },
+    {
+      "source": "projects/biz-t100/docs/startup-readiness.md",
+      "archive": "projects/biz-t100/docs/history/20260930/startup-readiness.md",
+      "original_sha256": "c6d41a00b1f9bb8d3ce207845386bfd36d9a90defed3b3fe06188f65cb4a915e",
+      "archive_sha256": "c839f99a5c0a438d5e7c8d263aeb3d72249d7bdb73f00800c526482ef0fb6fec",
+      "adaptation": "relative Markdown links rebased; retired script links refer to regression source; historical command text unchanged"
+    },
+    {
+      "source": "projects/biz-t100/docs/operations.md",
+      "archive": "projects/biz-t100/docs/history/20260930/operations.md",
+      "original_sha256": "d00766d1bfd00ad6873d05cba6af3628ff3707b755de213027d225fda57b1cac",
+      "archive_sha256": "fb2534cab6aa6758801e8d962660ea0f5e437561cead20b7ec71116278493ab5",
+      "adaptation": "relative Markdown links rebased; retired script links refer to regression source; historical command text unchanged"
+    },
+    {
+      "source": "projects/biz-t100/docs/tool-contracts.md",
+      "archive": "projects/biz-t100/docs/history/20260930/tool-contracts.md",
+      "original_sha256": "966423e0ea6b290785500b99eb560db2154986c16b77027915bce94813a7772f",
+      "archive_sha256": "8c689236f3c1e399f0eb250fd60efcd3b49c6c0553405946227b1ca12575ee2e",
+      "adaptation": "relative Markdown links rebased; retired script links refer to regression source; historical command text unchanged"
+    },
+    {
+      "source": "projects/biz-t100/docs/integration-inputs.md",
+      "archive": "projects/biz-t100/docs/history/20260930/integration-inputs.md",
+      "original_sha256": "98fcc189777b838203ec6c9ace1f9baba4d70b725069558f15f0a27b8cfd2647",
+      "archive_sha256": "e9b0b6f9d4bd53e7bbe2b9ef0b27ddaf03a17660bdf0e408ce36089e90353090",
+      "adaptation": "relative Markdown links rebased; retired script links refer to regression source; historical command text unchanged"
+    },
+    {
+      "source": "projects/biz-t100/docs/service-release.md",
+      "archive": "projects/biz-t100/docs/history/20260930/service-release.md",
+      "original_sha256": "db873676bea4b4d7610bb00f287cf74e3b933e68e8221f6495d44fd4f9ddb849",
+      "archive_sha256": "f95089bbd8832a391614f122acd1b08e9d6e6efd8cbc532753b420901b4f5919",
+      "adaptation": "relative Markdown links rebased; retired script links refer to regression source; historical command text unchanged"
+    },
+    {
+      "source": "projects/biz-t100/docs/error-codes.md",
+      "archive": "projects/biz-t100/docs/history/20260930/error-codes.md",
+      "original_sha256": "4039edea13eea964db7199dbe34e893bb93d62702e2711a709ea7e3f9790411b",
+      "archive_sha256": "4039edea13eea964db7199dbe34e893bb93d62702e2711a709ea7e3f9790411b",
+      "adaptation": "relative Markdown links rebased; retired script links refer to regression source; historical command text unchanged"
+    }
+  ],
+  "historical_registry": "docs/history/20260930/workspace.toml",
+  "current_documents": [
+    "../../../README.md",
+    "../../../STATUS.md",
+    "../../../AGENTS.md",
+    "../../../workspace.toml",
+    "../README.md",
+    "testing.md",
+    "upstream-interfaces.md",
+    "tool-contracts.md",
+    "error-codes.md",
+    "operations.md",
+    "service-release.md",
+    "integration-inputs.md",
+    "offline-acceptance.md",
+    "consolidation.md",
+    "direct-check.md",
+    "internal-test.md",
+    "approved-employee-case.md",
+    "live-read.md",
+    "live-write.md",
+    "password-reset.md",
+    "startup-readiness.md",
+    "history/20260930/README.md",
+    "../tests/legacy_support/README.md",
+    "../VALIDATION-consolidation-20260930.md"
+  ],
+  "private_indexes_updated": [
+    ".runtime/test-cases/owner/README.md",
+    ".runtime/test-cases/owner/manifest.json"
+  ],
+  "verification": {
+    "focused_regression": {
+      "tests": [
+        "tests/test_live_cli.py",
+        "tests/test_offline_entry.py"
+      ],
+      "passed": 56,
+      "seconds": 7.18
+    },
+    "help_commands": 7,
+    "public_command_models": 4,
+    "private_case_models_and_digests": 4,
+    "saved_account_receipts": 3,
+    "daily_entries": [
+      "live.py",
+      "offline.py"
+    ],
+    "legacy_python": 12,
+    "legacy_shell": 1,
+    "source_files_checked": 20,
+    "preserved_files_unchanged": 85,
+    "registry_paths_checked": 12,
+    "markdown_files_checked": 35,
+    "local_links_checked": 270,
+    "broken_links": 0,
+    "old_daily_commands": 0,
+    "real_target_values_in_current_docs": 0
+  },
+  "evidence_boundary": {
+    "user_manual_feedback": "passed-no-issues",
+    "account_receipts": "acknowledged",
+    "automatic_account_effect_verified": false,
+    "real_identity_verified": false,
+    "business_validated": false,
+    "published": false,
+    "new_real_business_calls": 0
+  },
+  "preserved_scope": [
+    "product-source",
+    "two-daily-scripts",
+    "existing-legacy-support",
+    "all-existing-dist-files",
+    "original-docx",
+    "private-permissions",
+    "current-and-legacy-audits"
+  ],
+  "product_artifacts_rebuilt": false
+}

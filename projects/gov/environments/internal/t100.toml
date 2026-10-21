@@ -1,0 +1,10 @@
+environment = "internal"
+metamcp_version = "2.4.22"
+metamcp_revision = "32b6e9813acfc13d1013eb2452be1899d6654bb9"
+management_local_url = "http://127.0.0.1:12008"
+downstream_url = "http://host.docker.internal:8781/mcp"
+business_bind = "172.17.0.1:8781"
+query_endpoint_local_url = "http://127.0.0.1:12008/metamcp/sysmcp-t100-internal-query/mcp"
+account_endpoint_local_url = "http://127.0.0.1:12008/metamcp/sysmcp-t100-internal-account/mcp"
+process_count = 1
+mcp_service_registration_count = 1

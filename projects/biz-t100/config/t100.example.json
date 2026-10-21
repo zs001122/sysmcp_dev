@@ -1,0 +1,10 @@
+{
+  "url": "https://t100.example.invalid/api",
+  "enterprise_id": "example-enterprise",
+  "host_product": "EXAMPLE",
+  "host_ip": "127.0.0.1",
+  "host_account": "example-service",
+  "service_ip": "127.0.0.1",
+  "service_id": "example-service-id",
+  "transport_profile": "https"
+}

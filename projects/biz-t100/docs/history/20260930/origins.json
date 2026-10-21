@@ -1,0 +1,90 @@
+{
+  "date": "2026-09-30",
+  "reason": "Preserve historical stages and old links; use one current testing guide.",
+  "documents": [
+    {
+      "source": "projects/biz-t100/docs/direct-check.md",
+      "archive": "projects/biz-t100/docs/history/20260930/direct-check.md",
+      "original_sha256": "306b1ad6b49bc800e21b47f4df5cd26f635e7a7141c6836142d5e5a371896863",
+      "archive_sha256": "5f32ffe016535b6a85a7979962aaf1e0ac346612baaa4d88ca51aba4a314db15",
+      "adaptation": "relative Markdown links rebased; retired script links refer to regression source; historical command text unchanged"
+    },
+    {
+      "source": "projects/biz-t100/docs/internal-test.md",
+      "archive": "projects/biz-t100/docs/history/20260930/internal-test.md",
+      "original_sha256": "66c5a42f0d690eac7174487a7badf73a1d96fc8d20d424b991e4991268daa4d9",
+      "archive_sha256": "71f33cce5fce2c310d2f877e5983ee725a852cffeff7255e4370b4efbc801cab",
+      "adaptation": "relative Markdown links rebased; retired script links refer to regression source; historical command text unchanged"
+    },
+    {
+      "source": "projects/biz-t100/docs/approved-employee-case.md",
+      "archive": "projects/biz-t100/docs/history/20260930/approved-employee-case.md",
+      "original_sha256": "cb52fd8aaac500b0c162cdd545f97b06224ee210291f0f214384db26a1b78579",
+      "archive_sha256": "ca408a7868d433a455635fc86a178890b7dac973c199ffc80520d14b0825adb0",
+      "adaptation": "relative Markdown links rebased; retired script links refer to regression source; historical command text unchanged"
+    },
+    {
+      "source": "projects/biz-t100/docs/live-read.md",
+      "archive": "projects/biz-t100/docs/history/20260930/live-read.md",
+      "original_sha256": "b982ce6284193ee102e79d8c6f441dfeb16d5917708329523fee6d090a566685",
+      "archive_sha256": "476622da6f4ba994476a3a01db38fb0e4aa82df2ba5b907bbdb5f715f9aab14a",
+      "adaptation": "relative Markdown links rebased; retired script links refer to regression source; historical command text unchanged"
+    },
+    {
+      "source": "projects/biz-t100/docs/live-write.md",
+      "archive": "projects/biz-t100/docs/history/20260930/live-write.md",
+      "original_sha256": "1a74701082368d954d114118cca322b69d0345dbdc9fabc7efc6d13744a70d2f",
+      "archive_sha256": "e8015b30f0f33c78ec4eaafa81277e876da0e8466a36df9680eee4a1a2999b95",
+      "adaptation": "relative Markdown links rebased; retired script links refer to regression source; historical command text unchanged"
+    },
+    {
+      "source": "projects/biz-t100/docs/password-reset.md",
+      "archive": "projects/biz-t100/docs/history/20260930/password-reset.md",
+      "original_sha256": "0700c8c913eec796ac7831f991eadd82dd47aa66e2e470183a44efbe9140acbb",
+      "archive_sha256": "46ca5c5678b13c28a4c4175e19560c9e5a430f65d2bb7d8c4010d0497b35ef5b",
+      "adaptation": "relative Markdown links rebased; retired script links refer to regression source; historical command text unchanged"
+    },
+    {
+      "source": "projects/biz-t100/docs/startup-readiness.md",
+      "archive": "projects/biz-t100/docs/history/20260930/startup-readiness.md",
+      "original_sha256": "c6d41a00b1f9bb8d3ce207845386bfd36d9a90defed3b3fe06188f65cb4a915e",
+      "archive_sha256": "c839f99a5c0a438d5e7c8d263aeb3d72249d7bdb73f00800c526482ef0fb6fec",
+      "adaptation": "relative Markdown links rebased; retired script links refer to regression source; historical command text unchanged"
+    },
+    {
+      "source": "projects/biz-t100/docs/operations.md",
+      "archive": "projects/biz-t100/docs/history/20260930/operations.md",
+      "original_sha256": "d00766d1bfd00ad6873d05cba6af3628ff3707b755de213027d225fda57b1cac",
+      "archive_sha256": "fb2534cab6aa6758801e8d962660ea0f5e437561cead20b7ec71116278493ab5",
+      "adaptation": "relative Markdown links rebased; retired script links refer to regression source; historical command text unchanged"
+    },
+    {
+      "source": "projects/biz-t100/docs/tool-contracts.md",
+      "archive": "projects/biz-t100/docs/history/20260930/tool-contracts.md",
+      "original_sha256": "966423e0ea6b290785500b99eb560db2154986c16b77027915bce94813a7772f",
+      "archive_sha256": "8c689236f3c1e399f0eb250fd60efcd3b49c6c0553405946227b1ca12575ee2e",
+      "adaptation": "relative Markdown links rebased; retired script links refer to regression source; historical command text unchanged"
+    },
+    {
+      "source": "projects/biz-t100/docs/integration-inputs.md",
+      "archive": "projects/biz-t100/docs/history/20260930/integration-inputs.md",
+      "original_sha256": "98fcc189777b838203ec6c9ace1f9baba4d70b725069558f15f0a27b8cfd2647",
+      "archive_sha256": "e9b0b6f9d4bd53e7bbe2b9ef0b27ddaf03a17660bdf0e408ce36089e90353090",
+      "adaptation": "relative Markdown links rebased; retired script links refer to regression source; historical command text unchanged"
+    },
+    {
+      "source": "projects/biz-t100/docs/service-release.md",
+      "archive": "projects/biz-t100/docs/history/20260930/service-release.md",
+      "original_sha256": "db873676bea4b4d7610bb00f287cf74e3b933e68e8221f6495d44fd4f9ddb849",
+      "archive_sha256": "f95089bbd8832a391614f122acd1b08e9d6e6efd8cbc532753b420901b4f5919",
+      "adaptation": "relative Markdown links rebased; retired script links refer to regression source; historical command text unchanged"
+    },
+    {
+      "source": "projects/biz-t100/docs/error-codes.md",
+      "archive": "projects/biz-t100/docs/history/20260930/error-codes.md",
+      "original_sha256": "4039edea13eea964db7199dbe34e893bb93d62702e2711a709ea7e3f9790411b",
+      "archive_sha256": "4039edea13eea964db7199dbe34e893bb93d62702e2711a709ea7e3f9790411b",
+      "adaptation": "relative Markdown links rebased; retired script links refer to regression source; historical command text unchanged"
+    }
+  ]
+}

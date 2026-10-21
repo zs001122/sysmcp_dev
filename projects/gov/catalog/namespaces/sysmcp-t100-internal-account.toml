@@ -1,0 +1,7 @@
+name = "sysmcp-t100-internal-account"
+metamcp_uuid = "20a227d8-dbde-448c-ac40-8fb05f123c0f"
+services = ["sysmcp-t100"]
+service_status = "ACTIVE"
+exposed_tools = ["sysmcp-t100__t100_account_maintain"]
+tool_mapping_uuid = "a7ff2fcf-fa43-4d43-8887-2f12843b318f"
+excluded_tools = ["sysmcp-t100__t100_employee_query"]

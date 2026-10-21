@@ -1,0 +1,25 @@
+{
+  "master": [
+    {
+      "gzxa001": "LOGIN-A",
+      "gzxa003": "E001",
+      "gzxastus": "N",
+      "is_reproduce": "N",
+      "password_reset": "N",
+      "detail": [
+        {
+          "gzxbstus": "Y",
+          "gzxb002": "1",
+          "gzxb003": "ROLE-A",
+          "detail1": [
+            {
+              "gzxcstus": "Y",
+              "gzxc004": "SITE-A",
+              "gzxc007": "N"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

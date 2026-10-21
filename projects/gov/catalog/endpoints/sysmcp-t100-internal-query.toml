@@ -1,0 +1,13 @@
+name = "sysmcp-t100-internal-query"
+metamcp_uuid = "b80cd8a4-75e1-4a83-9d9d-a02d253e646a"
+namespace = "sysmcp-t100-internal-query"
+environment_ref = "environments/internal/t100.toml"
+enable_api_key_auth = true
+enable_oauth = false
+use_query_param_auth = false
+create_mcp_server = false
+api_key_header = "X-API-Key"
+api_key_ref = ".runtime/t100-internal-query-api.key"
+api_key_uuid = "3c04c605-9082-4b0e-9f24-493e078cb664"
+status = "internal-test"
+published = false
