@@ -8,14 +8,14 @@
 
 | 层次 | 已有准备与证据 | 成功所证明的范围 |
 |---|---|---|
-| 独立工程 | 自身 `pyproject.toml`、`uv.lock`、开发 `.venv`；0.9.2 wheel／sdist，2026-10-08 的 1940 项离线通过 | 声明范围的逻辑／接口准备；不是 2026-10-21 重新执行的测试或真实业务效果 |
-| BIZ 常驻 | 一个 `sysmcp-biz-t100.service`；`maintenance` 模式在 `172.17.0.1:8781/mcp` 承载四工具 | 独立 .runtime/releases/0.9.2/.venv 非 editable wheel；2026-10-21 active／enabled、live／ready 200，用户 Linger=no |
+| 独立工程 | 自身 `pyproject.toml`、`uv.lock`、开发 `.venv`；0.9.2 wheel／sdist，2026-10-08 原离线记录保留，2026-10-21 本地重新执行 1940 项通过 | 声明范围的逻辑／接口准备，不代表真实业务效果 |
+| BIZ 常驻 | 一个 `sysmcp-biz-t100.service`；`maintenance` 模式在 `172.17.0.1:8781/mcp` 承载四工具 | 独立 .runtime/releases/0.9.2/.venv 非 editable wheel；2026-10-21 active／enabled、live／ready 200，用户 Linger=yes；未重启机器演练 |
 | 私有运行配置 | `.runtime/service/server-maintenance.json`；原 T100 配置、服务 key 引用、运行许可及审计保留 | 沿用原批准范围，没有因部署自动新增目标许可 |
 | 本机客户端 | 查询主体发现一个工具；现有维护主体发现员工更新和账号维护两个工具 | 原生验签与主体工具范围；`tools` 不发 T100 业务请求 |
 | GOV 内部组合 | 一个 `sysmcp-t100` 登记，query／account 两个 namespace 及 private endpoint | 2026-10-21 两端点发现及实际下游缺确认拒绝通过；历史跨端点拒绝证据保留，不是正式个人身份发布 |
 | 历史业务 | 真实查询、账号三次成功回执及用户手测反馈独立保留 | ACK 和手测反馈分别留证，不从员工 status 推定账号效果 |
 
-以上当前部署事实来自 [2026-10-21 验证](../VALIDATION-deployment-20261021.md)，本次 T100 业务读写为 0；[0.9.1 验证记录](../VALIDATION-v0.9.1.md) 继续作为历史接入来源。服务及上游状态须实际核对，网关连接令牌最长一小时且无自动刷新。旧 read／write 单元已停用，原文件和记录继续留档。
+以上当前部署事实来自 [2026-10-21 验证](../VALIDATION-deployment-20261021.md)，本次 T100 业务读写为 0；[0.9.1 验证记录](../VALIDATION-v0.9.1.md) 继续作为历史接入来源。服务及上游状态须实际核对，网关连接令牌最长一小时；两段续签与 20 分钟 timer 已启用，手动和自动轮均验证成功，最近结果见 [GOV 续签说明](../../gov/docs/connector-renewal.md)。旧 read／write 单元已停用，原文件和记录继续留档。
 
 ## 使用前的最小检查
 
@@ -24,7 +24,7 @@
 3. 核对统一用户服务、`/health/live` 和 `/health/ready`；ready 只表示本地配置、许可和审计准备，不证明 T100 可用。
 4. 使用所需客户端执行 `tools`，核对实际工具范围。员工新建已实现，但当前维护主体未获建档许可；不能为看到四工具临时放宽范围。
 5. 真实查询使用批准工号；写入使用批准用例及 `--confirm`，同一未决账号的写入仍会阻塞，不能换入口或请求号绕过。
-6. 经 MetaMCP 时显式选 `2025-06-18` Profile，核对 namespace 白名单与短期连接令牌；令牌续签文件后还须更新 MetaMCP 已保存的 Bearer token。直连使用 `2025-11-25`，不自动回退。
+6. 经 MetaMCP 时显式选 `2025-06-18` Profile，核对 namespace 白名单与短期连接令牌；检查续签链的最近整体成功与到期时间，单独签发文件或 timer active 不能代替 MetaMCP 发布回读核验。直连使用 `2025-11-25`，不自动回退。
 
 每一步的具体命令只维护在 [测试说明](testing.md) 和 [常驻运行说明](service-runtime.md)。原 DOCX、运行凭据、真实员工与请求／审计资料留私有 `.runtime`；旧脚本仅在 `tests/legacy_support/` 供离线回归。
 

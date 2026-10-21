@@ -21,7 +21,7 @@
 
 版本制品的实际文件与摘要以 `dist/` 中本版本构建记录为准；不得覆盖旧版制品、摘要或构建验证。2026-10-08 的构建及离线验收见 [0.9.2 验证](../VALIDATION-v0.9.2.md)，本次部署另见 [2026-10-21 验证](../VALIDATION-deployment-20261021.md)；[0.9.1 验证](../VALIDATION-v0.9.1.md) 保留历史接入证据；[0.9.0 验证](../VALIDATION-v0.9.0.md) 保留为此前常驻与只读组合证据，不继承旧版本测试计数。
 
-0.9.1 `offline.py --suite interfaces` 的 **675 项相关回归**和 0.9.0 的 1909 项全量结果均是历史证据，不继承为 0.9.2 测试通过。0.9.2 的 1940 项离线、制品摘要与独立安装见其版本验证，本次未重跑全量；交付、Git 和正式集成的缺项只维护在 [开发清单](development-checklist.md)。当前 0.9.2 wheel／sdist 的摘要、包含文件检查及独立安装证据分别见 [摘要文件](../dist/SHA256SUMS-v0.9.2)、[构建验证](../dist/BUILD-VALIDATION-v0.9.2.json)。日常命令见 [测试说明](testing.md)，发布前检查清单见 [运行准备](startup-readiness.md)。
+0.9.1 `offline.py --suite interfaces` 的 **675 项相关回归**和 0.9.0 的 1909 项全量结果均是历史证据，不继承为 0.9.2 测试通过。0.9.2 的原 1940 项离线、制品摘要与独立安装见其版本验证；2026-10-21 本地重新执行 BIZ 1940、CORE 4、GOV 29 项通过，新增记录见 [运维验证](../../gov/VALIDATION-operations-20261021.md)；交付、Git 和正式集成的缺项只维护在 [开发清单](development-checklist.md)。当前 0.9.2 wheel／sdist 的摘要、包含文件检查及独立安装证据分别见 [摘要文件](../dist/SHA256SUMS-v0.9.2)、[构建验证](../dist/BUILD-VALIDATION-v0.9.2.json)。日常命令见 [测试说明](testing.md)，发布前检查清单见 [运行准备](startup-readiness.md)。
 
 ## 服务登记描述
 
@@ -42,7 +42,7 @@ GOV 保存上述服务 metadata、环境引用、协议 Profile、工具白名�
 
 此前用户手测反馈与本地三次账号成功回执继续保留；账号 `acknowledged` 不能自动改成 `business_effect_verified=true`。本轮已切换固定 wheel 常驻服务并恢复网关，没有再次执行真实 T100 查询或写入。
 
-当前身份仍为 `real_identity_verified=false`。MetaMCP 2.4.22 不透传外部调用者 JWT；统一 MCP server 使用 `metamcp-internal-maintenance` 连接身份和一个查询＋账号维护的短期 JWT。查询／账号客户端配置和入口 Key 分开维护，namespace 工具白名单分别控制暴露范围。连接令牌最多一小时，续签并更新统一 server 的 Bearer token 后才能继续使用，不建设新的身份平台。
+当前身份仍为 `real_identity_verified=false`。MetaMCP 2.4.22 不透传外部调用者 JWT；统一 MCP server 使用 `metamcp-internal-maintenance` 连接身份和一个查询＋账号维护的短期 JWT。查询／账号客户端配置和入口 Key 分开维护，namespace 工具白名单分别控制暴露范围。连接令牌最多一小时；BIZ 签发和 GOV 更新原 server Bearer token 的两段运维工具及 timer 已启用，每 20 分钟执行，手动和自动轮均成功；最近结果见 [续签说明](../../gov/docs/connector-renewal.md)。签名私钥和业务许可仍归 BIZ，不建设新的身份平台。
 
 现版 MetaMCP Key 是用户级凭据，不天然绑定某个 endpoint；分开配置 Key 不构成端点级身份或员工权限隔离。签名连接主体与 BIZ 目标许可仍是独立控制层，正式个人身份与客户端归因契约尚待接入。
 
@@ -50,12 +50,12 @@ GOV 保存上述服务 metadata、环境引用、协议 Profile、工具白名�
 
 | 验收维度 | 当前签收范围 |
 |---|---|
-| `biz-validated` | 0.9.2 在 2026-10-08 的全量离线及制品核验通过；2026-10-21 固定部署及连接验证另记，不含真实个人身份或账号效果 |
+| `biz-validated` | 0.9.2 原全量离线及制品核验通过；2026-10-21 本地重新执行 1940 项通过，固定部署和连接验证分开留证，不含真实个人身份或账号效果 |
 | `business-validated` | 未签收；需要真实身份、唯一员工来源、真实上游、分层授权与审计证据 |
 | `published` | 未签收；当前只有内部 `gov-registered`／`composed`，仍缺正式身份链及完整发布验收 |
 
 `business-validated` 与 `published` 分别取证，不能互相推导。后续正式输入见 [集成输入](integration-inputs.md)；[统一维护入口 DEC-001](../../../docs/项目讨论与决策记录.md) 仅已确认需求，尚未实现，不作为当前发布能力。
 
-当前写保护是请求编号防重与 unknown 目标占用，跨请求业务幂等尚未实现；内部测试的显式授权不替代正式写发布前置。本轮不增加幂等键步骤、不迁移审计 schema。本地初始提交 667f8bf 的独立审查见 [交付审查](../../../docs/本地交付审查-20261021.md)，本轮文档收尾提交为 9a7bc74；origin 已配置、尚未推送，远端 CI／PR 未完成。固定 wheel 部署不等于未来构建可复现：hatchling 仍为范围版本，构建依赖固定及跨机器部署／回退仍待验收。
+当前写保护是请求编号防重与 unknown 目标占用，跨请求业务幂等尚未实现；内部测试的显式授权不替代正式写发布前置。本轮不增加幂等键步骤、不迁移审计 schema。初始提交 667f8bf 的本地审查见 [交付审查](../../../docs/本地交付审查-20261021.md)，该基线已在远端 main 且 [首次 CI](https://github.com/zs001122/sysmcp_dev/actions/runs/39552844241) 成功。本轮运维变更按独立提交取得 PR／CI 结果，见运维验证。构建约束已固定 6 包及哈希，只有约定 CI 构建命令启用该约束；CORE 重建摘要一致，BIZ 新候选因文档元数据变化而摘要不同，21 份产品源码不变、部署 wheel 不替换。跨机器部署、实际重启和回退仍待验收。
 
 当前单服务部署依据为 [ADR-009](../../../docs/架构决策-009-T100账号操作网关接入.md)，此前常驻决策见 [ADR-008](../../../docs/架构决策-008-T100常驻运行与网关测试身份.md)。GOV 当前组合登记见 [账号与查询接入记录](../../gov/docs/t100-account-onboarding.md)；[早期只读记录](../../gov/docs/t100-internal-onboarding.md) 保留为历史。历史发布描述见 [2026-09-30 快照](history/20260930/service-release.md)，先前入口整理见 [收敛清单](consolidation.md)。

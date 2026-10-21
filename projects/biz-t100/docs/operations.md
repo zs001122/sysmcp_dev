@@ -12,7 +12,7 @@
 | .runtime/service/maintenance-permissions.json | 常驻服务的主体、客户端、动作及员工／账号范围许可 |
 | .runtime/service/client-read.json、client-write.json | 同一服务的查询与维护客户端，持有各自签名配置，不持有 T100 key |
 | .runtime/service/client-gateway.json、client-gateway-account.json | 查询／账号端点客户端及各自网关入口 Key 引用 |
-| .runtime/service/gateway-maintenance-token.jwt | 供 MetaMCP 单一登记使用的短期 BIZ 连接令牌，不是网关 API Key 或 T100 key |
+| .runtime/exports/metamcp-connector.jwt | BIZ 明确发布给 GOV 的短期连接令牌；旧 service/gateway-maintenance-token.jwt 保留为历史文件，不作为自动同步来源 |
 | .runtime/live-read/runtime.json | 既有上游配置、企业号和服务凭据路径；目录名称是历史命名 |
 | .runtime/functions/permissions.json | 本机内部测试及常驻部署的写动作／目标约束、历史对象分类 |
 | .runtime/test-cases/owner/ | 已批准的本人请求文件与私有说明 |
@@ -42,7 +42,7 @@ request.json 是输入意图；effective-request.json 是实际业务报文；up
 | 姓名／部门检索被拒绝 | 通用参数模型支持检索，但当前服务主体 `allow_search=false`，须查询批准工号 |
 | 直连失败 | 检查统一 unit、8781 地址、客户端与服务端 issuer／audience／客户端及签名配置；服务不使用环境代理或跟随重定向 |
 | 网关发现失败而直连正常 | 检查 namespace／工具启用、入口 Key、MetaMCP 下游连接令牌有效期及其所存配置 |
-| 已续签文件但网关仍失败 | 私有 JWT 文件更新不会自动更新 MetaMCP 的 Bearer token，按运行说明通过受支持管理界面／API同步 |
+| 已续签文件但网关仍失败 | 查看 GOV 同步单元及私有 state.json 的最近结果；签发成功不等于发布成功，按 [续签运维](../../gov/docs/connector-renewal.md) 核查管理认证、原服务字段及发布后回读 |
 
 `/health/live` 证明进程存活，`/health/ready` 检查配置、许可及审计准备；两者不调用 T100，也不证明个人身份或账号效果。现有两个网关端点共享一个受控下游主体；MetaMCP 2.4.22 不透传外部 JWT，用户级 API Key 不能替代 BIZ 业务授权或员工映射。
 
@@ -62,5 +62,7 @@ request.json 是输入意图；effective-request.json 是实际业务报文；up
 | 账号自身unknown | 同账号后续写入仍阻止，不自动重试或解除 |
 
 0.9.2 本机临时签名主体固定 `temporary-local-operator`，密钥及令牌仍每次临时生成；该主体只用于内部测试，`real_identity_verified=false`。实际业务使用上游管理员服务凭据，BIZ 授权通过后才读取 key，不宣称继承员工 ERP 权限。正式身份和 MetaMCP 发布条件见 [集成输入](integration-inputs.md)。旧 read／write unit 已停用；旧端口、旧宿主和恢复步骤留在 [运维历史快照](history/20260930/operations.md)，不能据旧说明断言当前监听状态。
+
+2026-10-21 已启用用户 Linger，原 MetaMCP 容器使用 unless-stopped，Compose 固定原镜像；开机配置与实际重启演练分开记录。两段连接续签及 20 分钟 timer 已启用，手动与自动轮均成功，由 BIZ／GOV 分工维护，GOV 不读取 BIZ 私钥、映射或 T100 key；现场启用结果见 [运维验证](../../gov/VALIDATION-operations-20261021.md)。
 
 统一维护入口是后续已确认需求，当前未实现；身份、员工／账号映射、BIZ 授权与 GOV 发布关系仍分别归属各层。需求状态及边界见 [DEC-001](../../../docs/项目讨论与决策记录.md)。本页更新不改变运行配置、历史审计或业务数据。

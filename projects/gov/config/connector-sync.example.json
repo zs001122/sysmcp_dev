@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "base_url": "http://127.0.0.1:12008",
+  "origin": "http://127.0.0.1:12008",
+  "server_uuid": "00000000-0000-4000-8000-000000000001",
+  "expected_name": "sysmcp-t100",
+  "expected_type": "STREAMABLE_HTTP",
+  "expected_url": "http://172.17.0.1:8781/mcp",
+  "token_file": "/absolute/private/biz-handoff/gateway.jwt",
+  "admin_login_file": "/absolute/private/gov/admin-login.json",
+  "state_file": "/absolute/private/gov/connector-state.json",
+  "expected_issuer": "https://synthetic-issuer.invalid",
+  "expected_audience": "synthetic-t100-service",
+  "expected_subject": "synthetic-connector",
+  "expected_client_id": "synthetic-connector",
+  "expected_scopes": ["t100:employee:query", "t100:account:maintain"]
+}

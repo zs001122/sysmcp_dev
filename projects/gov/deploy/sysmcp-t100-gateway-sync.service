@@ -1,0 +1,12 @@
+[Unit]
+Description=Synchronize the approved T100 connector token to MetaMCP
+Requires=sysmcp-t100-gateway-token.service
+After=sysmcp-t100-gateway-token.service network-online.target
+
+[Service]
+Type=oneshot
+WorkingDirectory=/data/projects/sysmcp_dev/projects/gov
+ExecStart=/data/projects/sysmcp_dev/projects/gov/.venv/bin/python /data/projects/sysmcp_dev/projects/gov/.runtime/releases/connector-sync-0.1.0/sync_connector.py --config /data/projects/sysmcp_dev/projects/gov/.runtime/connector-sync/config.json
+UMask=0077
+NoNewPrivileges=true
+TimeoutStartSec=75

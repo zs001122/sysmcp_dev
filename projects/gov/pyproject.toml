@@ -1,0 +1,9 @@
+[project]
+name = "sysmcp-gov-ops"
+version = "0.1.0"
+description = "Narrow MetaMCP registration operations; no business data or signing keys"
+requires-python = ">=3.12,<3.13"
+dependencies = []
+
+[tool.uv]
+package = false

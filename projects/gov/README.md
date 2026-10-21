@@ -10,7 +10,7 @@
 
 ## 部署基线
 
-选型镜像基线为 `ghcr.io/metatool-ai/metamcp:2.4.22`，源码commit见 [selection.toml](selection.toml)。该文件是2026-09-29选型记录，其中待验收状态不覆盖后来取得的 T100 组合证据。运行版本、revision及应用和数据库digest已在2026-09-30记录中核对；Compose引用仍为浮动值，重新部署的制品固定尚未完成。2026-10-21 恢复原应用容器，原镜像 digest 不变、未重建升级；本次恢复不等于完成 Compose 固定。原退出码 137、OOMKilled=false，具体原因仍未确认，restart=no 暂未改变。
+选型镜像基线为 `ghcr.io/metatool-ai/metamcp:2.4.22`，源码commit见 [selection.toml](selection.toml)。该文件是2026-09-29选型记录，其中待验收状态不覆盖后来取得的 T100 组合证据。运行版本、revision 及应用／数据库 digest 已核对。2026-10-21 恢复原应用容器后，已将 Compose 两个镜像固定为原 digest，app 使用 pull_policy=if_not_present、restart=unless-stopped，并对原容器更新 restart 策略；未拉取镜像、重建或升级。Docker active／enabled，BIZ 用户 Linger=yes；未实际重启机器演练。原退出码 137、OOMKilled=false 的具体原因仍未确认。
 
 官方部署由MetaMCP应用和PostgreSQL组成，应用包含UI与backend。目标隔离基线为独立端口、网络、数据库、卷和Secret；数据库不发布宿主端口，应用首次只绑定loopback。现有实例的端口发布与此基线存在差异，见部署记录；此处是目标要求，不是已生效声明。上游启动会自动执行数据库迁移，不能把启动视为只读操作。
 
@@ -22,7 +22,7 @@
 | TRANSFORM_LOCALHOST_TO_DOCKER_INTERNAL | 若使用明确容器DNS，显式false，避免地址隐式改写 |
 | OIDC_* | 可选；本阶段不要求部署身份平台 |
 
-既有部署位于 `/data/projects/metamcp`，本目录只保留去敏部署记录和引用；本次启动原容器并更新现有 T100 服务连接令牌，未修改其真实.env、Compose 或数据库结构。官方 `example.env` 作为配置语义参考，接入前核对上述必要配置的实际状态。
+既有部署位于 `/data/projects/metamcp`，本目录只保留去敏部署记录和引用；本次启动原容器、更新现有 T100 连接令牌，随后备份并修订 Compose 的固定镜像和重启策略；没有修改真实 .env 或数据库结构。官方 `example.env` 作为配置语义参考，接入前核对上述必要配置的实际状态。
 
 ## 控制面职责
 
@@ -55,7 +55,7 @@ MetaMCP2.4.22固定backend使用TypeScript SDK1.16.0。本阶段兼容验收Prof
 
 | 检查 | 当前证据与剩余条件 |
 |---|---|
-| 产品与制品 | 2026-10-21 恢复原 MetaMCP 镜像，BIZ 0.9.2 固定 wheel 已部署并同步目录；Compose 固定、重启策略及部署隔离仍需独立验收 |
+| 产品与制品 | BIZ 0.9.2 固定 wheel 已部署；MetaMCP 原容器及镜像保持，Compose 已固定两个原 digest、restart 已配置；实际重启恢复与部署隔离仍需独立验收 |
 | 内部组合 | 一个 T100 服务、两个 namespace／endpoint；2026-10-21 两端点发现及实际转发至 BIZ 的缺确认拒绝通过，历史跨端点与启停证据保留 |
 | 业务对照 | 0.9.0 真实只读两跳与直连一致；2026-10-21 T100 业务读写均为 0，账号 ACK 与登录效果分别留证 |
 | 入口与启停 | 错误Key及namespace工具／服务停用前置拒绝，相关请求的BIZ业务执行为0；历史观察时长不是永久生效时限承诺 |
@@ -72,8 +72,9 @@ MetaMCP2.4.22固定backend使用TypeScript SDK1.16.0。本阶段兼容验收Prof
 | 当前T100查询和账号接入 | [T100当前接入](docs/t100-account-onboarding.md) |
 | 0.9.0只读接入过程 | [历史只读接入](docs/t100-internal-onboarding.md)、[历史验证](VALIDATION-internal-t100-20260930.md) |
 | 部署版本、条件与阶段事实 | [部署记录](部署记录.md) |
+| 连接令牌定期签发、发布与故障处理 | [续签运维](docs/connector-renewal.md)、[本轮验证](VALIDATION-operations-20261021.md) |
 | 查询、启停、密码重置如何调用 | [BIZ统一测试说明](../biz-t100/docs/testing.md) |
 
-2026-10-21 的恢复、固定制品和连接验证见 [部署验证](../biz-t100/VALIDATION-deployment-20261021.md)。仅更新既有统一服务的 bearerToken，其它字段和两个端点保持；公开目录版本及摘要同步 0.9.2。连接令牌到期为 2026-10-21 14:50:53 +08:00，无自动刷新，使用前须核对实际状态。历史验证、原登记及私有认证材料保留，不新增业务测试脚本。
+2026-10-21 的恢复、固定制品和连接验证见 [部署验证](../biz-t100/VALIDATION-deployment-20261021.md)。仅更新既有统一服务的 bearerToken，其它字段和两个端点保持；公开目录版本及摘要同步 0.9.2。后续已新增 GOV 独立运维项目（pyproject、uv.lock、.venv，无第三方依赖）及 29 项契约测试。BIZ 发布 `.runtime/exports/metamcp-connector.jwt`，GOV 只读该交接 JWT、更新原服务并回读核验；两段 oneshot 与 20 分钟 timer 已启用，手动首轮和自动轮均同步成功、令牌摘要不同；具体证据见 [运维验证](VALIDATION-operations-20261021.md)，实际到期时间以私有状态为准。历史验证、原登记及私有认证材料保留，不新增业务测试脚本。
 
 官方依据：[版本](https://github.com/metatool-ai/metamcp/releases/tag/v2.4.22)、[固定Compose](https://github.com/metatool-ai/metamcp/blob/32b6e9813acfc13d1013eb2452be1899d6654bb9/docker-compose.yml)、[环境模板](https://github.com/metatool-ai/metamcp/blob/32b6e9813acfc13d1013eb2452be1899d6654bb9/example.env)、[端点默认](https://github.com/metatool-ai/metamcp/blob/32b6e9813acfc13d1013eb2452be1899d6654bb9/packages/zod-types/src/endpoints.zod.ts#L137)、[认证中间件](https://github.com/metatool-ai/metamcp/blob/32b6e9813acfc13d1013eb2452be1899d6654bb9/apps/backend/src/middleware/api-key-oauth.middleware.ts#L116)。

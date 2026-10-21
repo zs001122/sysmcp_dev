@@ -45,7 +45,7 @@
 
 私有 `client-gateway-account.json` 与查询 `client-gateway.json` 分别配置，入口 Key 分别维护。MetaMCP 现版 Key 是用户级访问凭据，不天然绑定单一 endpoint；分配两个 Key 不等于实现两种员工业务权限。端点工具范围由 namespace 白名单控制，业务限制由 BIZ 的受控连接主体、scope、目标和 `status-password` 策略实施。
 
-两个端点共享下游连接 JWT，最长 1 小时；只为查询＋账号维护、`status-password`、禁止宽泛检索且目标非空的启用主体签发，不包含员工建档／更新 scope。续签由 BIZ 进行，再通过 MetaMCP 受支持界面／API 更新统一 server 的 Bearer token；只更新私有 JWT 文件不会自动更新网关。完整步骤唯一维护在 [BIZ 运行说明](../../biz-t100/docs/service-runtime.md#短期连接令牌维护)，当前未实现自动刷新。本次已更新令牌的到期时间为 2026-10-21 14:50:53 +08:00，不能据本页或旧发现结果判断未来仍有效。
+两个端点共享下游连接 JWT，最长 1 小时；只为查询＋账号维护、`status-password`、禁止宽泛检索且目标非空的启用主体签发，不包含员工建档／更新 scope。续签由 BIZ 进行，再通过 MetaMCP 受支持界面／API 更新统一 server 的 Bearer token；只更新私有 JWT 文件不会自动更新网关。2026-10-21 已实现 BIZ 签发与 GOV 发布的两个独立 oneshot，以及每 20 分钟调度的 timer；已启用且手动首轮、自动轮均同步成功；GOV 只读专用交接 JWT、不读 BIZ 私钥或映射。现场启用、最近成功与失败处理统一见 [续签说明](connector-renewal.md) 和 [运维验证](../VALIDATION-operations-20261021.md)。BIZ 签发边界见 [运行说明](../../biz-t100/docs/service-runtime.md#短期连接令牌维护)；当前有效期以私有状态为准，不沿用旧手动令牌时间。
 
 GOV 入口 Key、BIZ 资源 JWT 和 T100 服务 key 保持分离。签名私钥、T100 凭据、员工／账号映射、目标范围、授权策略和业务审计不进入 GOV；GOV 仅维护已准入服务、环境引用、协议、namespace、endpoint、白名单及组合证据。MetaMCP 2.4.22 不透传外部用户 JWT，下游静态客户端不代表真实员工身份，输出 `real_identity_verified=false`、`caller_identity_forwarded=false`。正式 IdP、`business-validated` 与完整 `published` 尚未验收。
 

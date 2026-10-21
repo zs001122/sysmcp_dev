@@ -69,7 +69,7 @@ uv pip check --python "$T100_RELEASE_DIR/.venv/bin/python"
 5. 执行 `systemctl --user daemon-reload`、`systemctl --user restart sysmcp-biz-t100.service`，验证 active、live／ready 及直连工具发现，再核对网关连接令牌与两端点发现。更新 GOV 制品版本及摘要，保存部署证据；启动和发现不要求重放业务写入。
 6. 若切换失败，停止新服务，恢复本次备份的 unit，reload 后启动并重新检查。当前用户 unit 是指向项目 deploy 文件的符号链接，恢复时写回该目标文件即可；原 `.venv` 保留。不要恢复旧审计快照或删除新记录，也不要改写 unknown。原环境曾为 editable 且元数据 0.9.1，不能称为可复现的旧版制品；本次未实际执行回退演练，长期回退需另备已验收固定 wheel 环境。
 
-现有 wheel 按摘要可安装；CORE 与 BIZ 的构建后端仍是 `hatchling>=1.27,<2`，未来重新构建的完整可复现性尚未签收。固定构建依赖、跨机器安装和回退演练继续列在开发清单，不重新构建覆盖本次 0.9.2。
+现有 wheel 按摘要可安装；CORE 与 BIZ 的 pyproject 构建后端仍是范围声明，但 CI 已通过独立约束固定 6 个构建包和哈希，详见 [代码交付约定](../../../docs/代码交付约定.md)。2026-10-21 CORE 重建摘要匹配；BIZ 新候选因文档元数据变化而摘要不同，未替换现行 wheel。跨机器安装和回退演练继续列在开发清单，不覆盖原 0.9.2 制品。
 
 ## 启动与停止
 
@@ -98,7 +98,7 @@ systemctl --user stop sysmcp-biz-t100.service
 systemctl --user enable sysmcp-biz-t100.service
 ```
 
-这是用户级服务，启动依赖该用户的 systemd 管理器；仅启用 unit 不表示已配置未登录时的机器启动。当前用户 `Linger=no`，本次未修改系统级服务或用户 linger，未登录时开机常驻仍未验收。故障日志可用 `journalctl --user -u sysmcp-biz-t100.service` 查看。
+这是用户级服务，启动依赖该用户的 systemd 管理器。2026-10-21 已启用并核对 `Linger=yes`，统一 unit 保持 enabled；Docker 宿主 active／enabled，原 MetaMCP 应用容器改为 `unless-stopped`，Compose 固定应用与数据库原镜像摘要。启动配置已就绪，尚未重启机器演练，不宣称开机恢复已经实测。故障日志可用 `journalctl --user -u sysmcp-biz-t100.service` 查看。
 
 也可以在停止该 unit 后用产品 CLI 前台启动统一服务，避免端口冲突：
 
@@ -142,7 +142,7 @@ MetaMCP 2.4.22 不透传外部调用者的 JWT。两个 namespace 共用受控�
 
 ## 短期连接令牌维护
 
-日常 `live.py` 调用自动产生最多五分钟的客户端令牌。MetaMCP 的单一 `sysmcp-t100` server 使用一个下游连接令牌，默认且最多有效一小时；过期后由 BIZ 运维续签，再通过 MetaMCP 受支持的管理界面／API更新该 server 的 Bearer token。两个 namespace 不需要分别续签。2026-10-21 已续签并仅更新既有 server 的 `bearerToken`，其它字段保持；本次令牌到期时间为 **2026-10-21 14:50:53 +08:00**，不是长期有效凭据。目前没有自动刷新；使用前核对实际到期时间，不能仅凭健康检查或旧发现结果判断可用。
+日常 `live.py` 调用自动产生最多五分钟的客户端令牌。MetaMCP 的单一 `sysmcp-t100` server 使用一个下游连接令牌，默认且最多有效一小时；两个 namespace 共用一次续签。2026-10-21 已新增两段独立运维单元：BIZ `sysmcp-t100-gateway-token.service` 调用既有 CLI，把受控主体令牌发布至 `.runtime/exports/metamcp-connector.jwt`；GOV `sysmcp-t100-gateway-sync.service` 只读取这一交接 JWT，通过受支持管理 API 更新原 server 的 Bearer token，并回读核验其它字段不变。`sysmcp-t100-gateway-sync.timer` 已 enabled／active，启用约一分钟后首次触发，随后每 20 分钟调度并保留 Persistent。手动首轮和定时自动轮均同步成功且令牌摘要不同；最近结果以 [GOV 续签说明](../../gov/docs/connector-renewal.md) 和 [运维验证](../../gov/VALIDATION-operations-20261021.md) 为准。早期手动令牌到期时间只属于原部署记录，不能作为当前有效期。
 
 ```bash
 .runtime/releases/0.9.2/.venv/bin/sysmcp-t100 issue-gateway-token \
@@ -150,10 +150,10 @@ MetaMCP 2.4.22 不透传外部调用者的 JWT。两个 namespace 共用受控�
   --signing-key "$PWD/.runtime/service/maintenance-signing.pem" \
   --subject internal-gateway-maintenance \
   --client-id metamcp-internal-maintenance \
-  --output "$PWD/.runtime/service/gateway-maintenance-token.jwt"
+  --output "$PWD/.runtime/exports/metamcp-connector.jwt"
 ```
 
-命令仅为已配置、启用的受控主体签发查询与账号维护 scope，不调用 T100、不读取其 key；只输出私有文件路径及到期时间，不输出令牌。网关连接不携带员工更新或建档 scope。更新文件不会自动刷新 MetaMCP 已保存的 Bearer token，必须同步更新统一 server 的连接配置。签名私钥始终留在 BIZ；网关只取得其连接所需的短期令牌。网关访问 Key、BIZ 资源令牌与 T100 服务 key 分别维护。
+命令仅为已配置、启用的受控主体签发查询与账号维护 scope，不调用 T100、不读取其 key；只输出私有文件路径及到期时间，不输出令牌。网关连接不携带员工更新或建档 scope。单独执行该命令只签发文件，不完成 MetaMCP 发布；两段运维链执行成功才表示网关令牌同步，具体状态检查与恢复统一见 GOV 续签说明。签发失败、管理认证失败或核验失败不得显示整体成功。签名私钥始终留在 BIZ；GOV 只读取专门交接目录中的短期令牌，不读取 BIZ 运行配置、员工映射、许可或服务 key。网关访问 Key、BIZ 资源令牌与 T100 服务 key 分别维护。
 
 ## 审计与验收状态
 
@@ -161,6 +161,6 @@ MetaMCP 2.4.22 不透传外部调用者的 JWT。两个 namespace 共用受控�
 
 服务调用证据位于 `.runtime/functions/service-cases/`，包括原始意图、实际报文、受限回执及结果；真实员工与凭据不进入公开源码或制品。调用授权在派发前、派发后及最终交付前复核，撤权后不返回员工资料。
 
-本阶段证明常驻运行和受控内部连接；身份仍为 `real_identity_verified=false`，不签收正式 `business-validated` 或完整 `published`。现行部署、实际下游确认门禁及缺失／错误 Key 拒绝见 [2026-10-21 部署验证](../VALIDATION-deployment-20261021.md)；1940 项离线与构建记录见 [2026-10-08 的 0.9.2 验证](../VALIDATION-v0.9.2.md)，早期拓扑迁移见 [0.9.1 历史验证](../VALIDATION-v0.9.1.md)。MetaMCP 本次恢复原容器，仍为 `restart=no` 且 Compose 镜像引用未固定，持续运行与重新部署另行验收。统一部署以 [ADR-009](../../../docs/架构决策-009-T100账号操作网关接入.md) 为准；[ADR-008](../../../docs/架构决策-008-T100常驻运行与网关测试身份.md) 保留早期读写分离背景，[RU-007](../../../docs/reuse/RU-007-T100常驻服务与远程客户端.md) 记录复用依据。
+本阶段证明常驻运行和受控内部连接；身份仍为 `real_identity_verified=false`，不签收正式 `business-validated` 或完整 `published`。现行部署、实际下游确认门禁及缺失／错误 Key 拒绝见 [2026-10-21 部署验证](../VALIDATION-deployment-20261021.md)；1940 项离线与构建记录见 [2026-10-08 的 0.9.2 验证](../VALIDATION-v0.9.2.md)，早期拓扑迁移见 [0.9.1 历史验证](../VALIDATION-v0.9.1.md)。MetaMCP 原容器已设置 `unless-stopped`，Compose 两个镜像固定原 digest，未拉取、重建或升级；BIZ 用户 Linger 已启用。持续运行配置和续签现场证据见 [运维验证](../../gov/VALIDATION-operations-20261021.md)，实际重启恢复及回退仍另行验收。统一部署以 [ADR-009](../../../docs/架构决策-009-T100账号操作网关接入.md) 为准；[ADR-008](../../../docs/架构决策-008-T100常驻运行与网关测试身份.md) 保留早期读写分离背景，[RU-007](../../../docs/reuse/RU-007-T100常驻服务与远程客户端.md) 记录复用依据。
 
-统一维护入口已在 [DEC-001](../../../docs/项目讨论与决策记录.md) 确认为后续需求，尚未实现。目前连接令牌续签与 MetaMCP 配置更新仍是分层运维步骤，不能描述为自动跨层下发。
+统一维护入口已在 [DEC-001](../../../docs/项目讨论与决策记录.md) 确认为后续需求，尚未实现。当前新增的两段续签只自动化既有连接凭据的受控发布；员工／账号绑定、业务授权与服务登记的统一维护入口仍未实现，不能将续签工具描述为通用跨层管理平台。

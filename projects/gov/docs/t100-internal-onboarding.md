@@ -22,7 +22,7 @@
 
 当前登记状态为 `composed`，`business_validated=false`、`published=false`。0.9.1 已有两个端点发现及跨端点直接调用拒绝等边界证据，见 [BIZ 0.9.1 验证](../../biz-t100/VALIDATION-v0.9.1.md)；真实只读两跳与直连对照来自下文 0.9.0 的历史证据，不将其描述为本次文档同步重新执行。2026-10-21 恢复原 MetaMCP 容器并更新原服务连接 token 后，两个端点工具发现通过，查询端点仍只发现上表指定工具；本次没有真实 T100 业务调用，记录见 [部署验证](../../biz-t100/VALIDATION-deployment-20261021.md)。
 
-两个端点共享最长一小时的 BIZ 连接 JWT。续签和统一 server 的 Bearer token 更新步骤见 [BIZ 运行说明](../../biz-t100/docs/service-runtime.md#短期连接令牌维护)，当前没有自动刷新。本次令牌到期为 2026-10-21 14:50:53 +08:00，使用前须核对实际到期时间及已保存的服务配置。签名私钥、员工／账号映射、目标许可、T100 key 和业务审计仍归 BIZ；GOV 不保存其副本。总体规则见 [GOV 说明](../README.md) 与 [服务接入规范](service-onboarding.md)。
+两个端点共享最长一小时的 BIZ 连接 JWT。2026-10-21 已实现 BIZ 签发、GOV 通过受支持 API 发布的两段运维工具和 20 分钟 timer；已启用且手动、自动轮均成功，实际结果见 [续签说明](connector-renewal.md) 和 [运维验证](../VALIDATION-operations-20261021.md)。签发边界见 [BIZ 运行说明](../../biz-t100/docs/service-runtime.md#短期连接令牌维护)，使用前核对最近整体成功、实际到期时间及服务配置，不能沿用早期手动令牌时间。签名私钥、员工／账号映射、目标许可、T100 key 和业务审计仍归 BIZ；GOV 不保存其副本。总体规则见 [GOV 说明](../README.md) 与 [服务接入规范](service-onboarding.md)。
 
 ## 历史阶段：0.9.0 独立只读接入
 
