@@ -23,7 +23,7 @@ BIZ-ADP：独立业务适配项目；按信任与运行边界组成 FastMCP 服�
 |---|---|
 | [GOV](projects/gov/README.md) | MetaMCP 2.4.22已核对；T100一个服务登记，查询／账号两个端点的工具范围及前置拒绝验证通过；正式发布仍待身份与业务验收 |
 | [CORE](projects/core/README.md) | Python 3.12 + FastMCP 4.0.10 独立项目、服务工厂、本地工程探针、测试与锁文件 |
-| [BIZ-T100](projects/biz-t100/README.md) | 0.9.2 交付候选收尾；现有部署基线 0.9.1，一个服务承载四接口、两个网关端点；本轮验收与待办见独立清单 |
+| [BIZ-T100](projects/biz-t100/README.md) | 0.9.2 固定 wheel 已部署，一个服务承载四接口、两个网关端点；2026-10-21 直连及网关工具发现通过，业务验收另记 |
 | [BIZ-ADP 规范](docs/BIZ-ADP开发规范.md) | 后续业务系统沿统一目录、工具、身份与验收规范独立接入 |
 
 短中期优先 MetaMCP；ContextForge 仅列为后续治理需求增长时的评估项，不并行建设。选型依据与能力边界见[架构决策](docs/架构决策-001.md)。旧分析报告保留在 [reports](reports/mcp_auth_demo-20260929/项目架构分析与模块化闭环规划.md)，其中产品版本结论是历史基线，当前选型以本次决策为准。
@@ -53,4 +53,4 @@ uv run --locked sysmcp-probe
 
 探针仅监听 `127.0.0.1:8765/mcp`，只有无业务能力的 `core_probe`。它用于验证框架和工程结构，不是业务系统或治理闭环。
 
-当前状态见 [STATUS.md](STATUS.md)，开发交付与正式集成的唯一待办矩阵见 [BIZ-T100 开发清单](projects/biz-t100/docs/development-checklist.md)。BIZ-T100 的模块、信息和文档入口见 [项目梳理](projects/biz-t100/docs/project-overview.md)。四接口已提供员工新建、查询、更新及登录账号维护，日常仍使用 `scripts/offline.py` 和 `scripts/live.py`。四接口、直连及MetaMCP业务命令统一见 [测试说明](projects/biz-t100/docs/testing.md)，服务配置和连接令牌维护见 [运行说明](projects/biz-t100/docs/service-runtime.md)。0.9.2 候选修正员工状态描述并固定本机临时操作员主体，仍原生验签；编号防重与 unknown 占用已实现，跨请求业务幂等尚未实现。本轮全量离线、静态及依赖检查已通过；不改变现有运行配置、不部署、不追加真实业务调用、不提交或推送。候选验证见 [v0.9.2](projects/biz-t100/VALIDATION-v0.9.2.md)，此前接入见 [v0.9.1](projects/biz-t100/VALIDATION-v0.9.1.md)，之前的 [收敛验证](projects/biz-t100/VALIDATION-consolidation-20260930.md) 保留为历史证据。
+当前状态见 [STATUS.md](STATUS.md)，开发交付与正式集成的唯一待办矩阵见 [BIZ-T100 开发清单](projects/biz-t100/docs/development-checklist.md)。BIZ-T100 的模块、信息和文档入口见 [项目梳理](projects/biz-t100/docs/project-overview.md)。四接口已提供员工新建、查询、更新及登录账号维护，日常仍使用 `scripts/offline.py` 和 `scripts/live.py`。四接口、直连及MetaMCP业务命令统一见 [测试说明](projects/biz-t100/docs/testing.md)，服务配置和连接令牌维护见 [运行说明](projects/biz-t100/docs/service-runtime.md)。0.9.2 修正员工状态描述并固定本机临时操作员主体，仍原生验签；编号防重与 unknown 占用已实现，跨请求业务幂等尚未实现。2026-10-21 已恢复原 MetaMCP 容器，常驻 BIZ 切换为非 editable 的 0.9.2 wheel，直连及两个网关端点的工具发现通过，本轮 T100 业务读写均为 0。网关连接令牌最长一小时且没有自动刷新，运行状态须即时核对。1940 项全量离线结果属于 2026-10-08 的 [v0.9.2 验证](projects/biz-t100/VALIDATION-v0.9.2.md)；本次部署、Git 基线及运维缺口见 [2026-10-21 部署验证](projects/biz-t100/VALIDATION-deployment-20261021.md)。此前 [v0.9.1 接入](projects/biz-t100/VALIDATION-v0.9.1.md) 与 [收敛验证](projects/biz-t100/VALIDATION-consolidation-20260930.md) 保留为历史证据。

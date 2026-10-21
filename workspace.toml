@@ -1,6 +1,6 @@
 # Project registry only. Each Python project owns its own uv.lock and .venv.
 schema_version = 1
-phase = "02-t100-v092-delivery-candidate-v091-deployed"
+phase = "02-t100-v092-fixed-wheel-deployed-internal-composed"
 
 [architecture]
 gov_product = "metamcp"
@@ -31,9 +31,11 @@ kind = "python-mcp-service"
 state = "biz-validated"
 evidence_scope = "offline-contracts-persistent-http-and-internal-gateway-plus-separate-manual-receipts"
 business_version = "0.9.2"
-deployed_business_version = "0.9.1"
-delivery_state = "candidate-not-deployed"
-validation_scope = "candidate-all-offline-validated-existing-deployment-v091"
+deployed_business_version = "0.9.2"
+delivery_state = "fixed-wheel-deployed-local-baseline-reviewed-remote-pending"
+validation_scope = "offline-20261008-plus-fixed-wheel-and-tools-discovery-20261021"
+deployment_evidence = "projects/biz-t100/VALIDATION-deployment-20261021.md"
+service_environment = "projects/biz-t100/.runtime/releases/0.9.2/.venv"
 development_checklist = "projects/biz-t100/docs/development-checklist.md"
 request_deduplication = "request-id-plus-unknown-target-lock"
 business_idempotency = "pending-design-not-implemented"
