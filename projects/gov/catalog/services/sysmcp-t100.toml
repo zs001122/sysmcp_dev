@@ -18,6 +18,7 @@ identity_mode = "temporary-static-connector"
 external_user_forwarded = false
 connector_lifetime_seconds = 3600
 automatic_token_refresh = true
+token_refresh_scope = "registration-and-new-sessions-not-active-session-hot-swap"
 renewal_interval_minutes = 20
 renewal_guide_ref = "docs/connector-renewal.md"
 operations_evidence_ref = "VALIDATION-operations-20261021.md"

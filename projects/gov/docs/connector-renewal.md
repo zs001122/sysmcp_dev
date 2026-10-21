@@ -34,4 +34,30 @@ BIZ 的签发 unit 不设置 RemainAfterExit；GOV unit 明确 Requires／After 
 
 定时配置和 Linger 生效证明已具备用户服务常驻条件；不重启宿主时不能宣称实际开机演练完成。持续续签应记录独立轮次的不同令牌到期时间及同步成功，不能只凭一次运行通过签收长期运行。
 
+MetaMCP 2.4.22 更新服务后异步刷新闲置连接及后续新会话使用的参数；已有活跃 MCP 会话继续使用创建时的 Authorization，不能无缝换成新 JWT。管理 API 回读成功也不代表异步连接刷新已经完成，没有固定等待时长保证。本轮的自动续签范围是**登记更新与后续新建会话**，不签收既有长会话跨令牌到期的连续可用性。
+
+当前 live.py 每次调用独立创建并结束 MCP 会话，适用上述范围。持久客户端应在业务请求完成后，使用客户端 SDK 结束当前会话，再初始化新会话；MetaMCP 支持带原 Mcp-Session-Id 的标准 HTTP DELETE 关闭该会话。不能在写请求进行中强制断连，不能因认证失效自动重发业务操作。固定版本没有单服务活跃连接热更新管理 API；全局 session lifetime 设置不作为本服务的续签修复，本轮不调整它或重启网关。
+
+此限制依据固定源码 commit `32b6e9813acfc13d1013eb2452be1899d6654bb9` 的 `mcp-servers.impl.ts` 更新后的异步失效处理、`mcp-server-pool.ts` 的 activeSessions 命中及 invalidateIdleSession、`client.ts` 的 transport 构造和 `streamable-http.ts` 的 DELETE 处理核对。实际持久客户端的会话结束／新建策略需在其接入阶段单独验证。
+
 此工具依赖固定 MetaMCP 版本的管理 API schema；产品升级时重新核对登录、get／update 以及会话失效行为。BIZ 升级不隐式切换签发制品路径，先校验新制品和导出契约，再修改其自有 unit。日常业务仍只使用 BIZ 的 offline.py／live.py，本工具属于 GOV 运维入口。
+
+## 维护检查
+
+当前安装使用 GOV 自身 `.venv` 解释器及 `.runtime/releases/connector-sync-0.1.0/sync_connector.py` 固定副本；模板位于本项目 deploy 目录，BIZ 签发模板归 BIZ 自身。运行配置按模板在私有目录维护，不提交真实凭据。
+
+```bash
+# 查看调度、最近执行结果；不要打印令牌或管理登录文件
+systemctl --user list-timers sysmcp-t100-gateway-sync.timer --no-pager
+systemctl --user show sysmcp-t100-gateway-token.service sysmcp-t100-gateway-sync.service \
+  -p Result -p ExecMainStatus -p ExecMainStartTimestamp
+```
+
+计划停机时先停止 timer，等待两个在途维护单元结束，再停止 BIZ 服务；否则后续定时签发会通过 Requires 重新启动 BIZ。停用自动续签使用 `systemctl --user disable --now sysmcp-t100-gateway-sync.timer`；恢复使用 `systemctl --user enable --now sysmcp-t100-gateway-sync.timer`。这些是连接维护命令，不调用 T100。
+
+GOV 独立离线验证在 `/data/projects/sysmcp_dev/projects/gov` 执行：
+
+```bash
+uv sync --locked
+uv run --no-sync python -m unittest discover -s tests -v
+```

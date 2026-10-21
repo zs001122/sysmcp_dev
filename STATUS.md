@@ -9,10 +9,10 @@
 | MetaMCP | 原应用容器已恢复，镜像 digest 未变、未重建升级；一个 sysmcp-t100 登记，query／account 两端点保留，仅更新下游连接令牌 |
 | 连接验证 | 直连 2025-11-25：查询 1 工具、维护 2 工具；网关 2025-06-18：两个端点各 1 个指定工具，未调用 T100 |
 | 持续运行 | MetaMCP 原容器 restart=unless-stopped；Compose 固定应用／数据库原镜像摘要；Docker active／enabled、BIZ 用户 Linger=yes；未重启机器演练 |
-| 连接令牌维护 | 两段 oneshot 及每 20 分钟 timer 已启用；手动首轮和自动轮均签发／同步成功，令牌摘要不同且均回读核验；最长一小时，不提高主体权限；续签后两个网关端点各发现唯一指定工具 |
+| 连接令牌维护 | 两段 oneshot 及每 20 分钟 timer 已启用；手动首轮和自动轮均签发／同步成功，令牌摘要不同且均回读核验；最长一小时，不提高主体权限；续签后两个网关端点各发现唯一指定工具。覆盖登记及新会话，现版 MetaMCP 长会话仍需在请求完成后结束并重新连接 |
 | 已有保护 | 请求编号防重、未知写结果占用、显式确认和禁止自动重试；跨请求业务幂等仍未实现 |
 | 测试与制品 | 2026-10-21 本地 BIZ 1940／CORE 4／GOV 29 项通过；构建环境 6 包按哈希锁定，CORE 重建摘要相同；BIZ 候选元数据变化、21 份产品源码未变，未覆盖部署包 |
-| Git 与审查 | 初始基线 667f8bf 已在 origin/main；[首次远端 CI](https://github.com/zs001122/sysmcp_dev/actions/runs/39552844241) 成功。原本地审查见 [交付审查](docs/本地交付审查-20261021.md)；本轮运维变更的推送、PR 与 CI 状态另见运维验证，不继承基线结果 |
+| Git 与审查 | 初始基线 667f8bf 已在 origin/main；[首次远端 CI](https://github.com/zs001122/sysmcp_dev/actions/runs/39552844241) 成功。原本地审查见 [交付审查](docs/本地交付审查-20261021.md)；本轮实现 e2ea075 已推送并建立 [PR #1](https://github.com/zs001122/sysmcp_dev/pull/1)，实现提交的 [远端 CI](https://github.com/zs001122/sysmcp_dev/actions/runs/39569822959) 成功，后续提交检查见 [PR 检查](https://github.com/zs001122/sysmcp_dev/pull/1/checks)；正式合并评审仍待完成 |
 | 正式状态 | 内部临时身份 real_identity_verified=false；business-validated 与完整 published 仍未签收 |
 
 实际部署及检查记录见 [2026-10-21 部署验证](projects/biz-t100/VALIDATION-deployment-20261021.md)，源码与离线验收见 [0.9.2 验证记录](projects/biz-t100/VALIDATION-v0.9.2.md)。pyproject 中构建后端仍为范围约束，CI 已通过独立构建约束固定 6 包及 SHA-256；只有使用约定构建命令才保证这套固定环境。现成部署 wheel 摘要保持不变，跨机器部署、重启恢复与实际回退演练仍待完成。
@@ -21,7 +21,7 @@
 
 ## 使用与后续工作
 
-[开发清单](projects/biz-t100/docs/development-checklist.md) 是唯一待办矩阵。优先完成本轮运维变更的远端 PR／CI 审查，并补实际重启恢复、跨机器部署与回退证据，再按现有证据归档真实业务验收；不为归档重复成功写入。正式发布前仍需解决幂等、真实身份、上游认证和两跳归因。具体命令仅见 [测试说明](projects/biz-t100/docs/testing.md)，固定 wheel 安装、切换、回退及令牌维护见 [运行说明](projects/biz-t100/docs/service-runtime.md)。
+[开发清单](projects/biz-t100/docs/development-checklist.md) 是唯一待办矩阵。优先完成 PR 合并评审，并补实际重启恢复、跨机器部署与回退证据，再按现有证据归档真实业务验收；不为归档重复成功写入。正式发布前仍需解决幂等、真实身份、上游认证和两跳归因。具体命令仅见 [测试说明](projects/biz-t100/docs/testing.md)，固定 wheel 安装、切换、回退及令牌维护见 [运行说明](projects/biz-t100/docs/service-runtime.md)。
 
 本次运维授权与边界见 [DEC-004](docs/项目讨论与决策记录.md#dec-004内部连接自动续签常驻条件与远端交付)，此前恢复部署见 [DEC-003](docs/项目讨论与决策记录.md#dec-003metamcp-恢复与-biz-t100-固定制品部署)。[DEC-002](docs/项目讨论与决策记录.md#dec-002biz-t100-交付收尾与写入幂等边界) 保留 2026-10-08 候选阶段来源；DEC-001 统一维护入口是已确认但未实现的后续需求，不预建新的 IAM 或 AI 平台。
 

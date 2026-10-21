@@ -30,6 +30,8 @@
 
 上述到期时间只记录这两个历史轮次，不代表长期当前到期时间。运行情况以 GOV 私有 `.runtime/connector-sync/state.json` 的最近成功和实际过期时点、两个 unit 的执行结果为准；一次或两次成功不签收长期稳定性。签发失败时 GOV 不运行，原状态文件不会刷新，不能只看其旧 success 字段。
 
+固定版本源码复核发现：MetaMCP 更新登记后异步刷新闲置连接，活跃会话仍持有原 Authorization。因此现场结果覆盖登记续签和新建客户端调用，不证明原长会话能跨旧令牌到期继续调用。live.py 每次独立创建／结束会话；持久客户端须在请求完成后结束旧会话并重新初始化，不能自动重试业务请求。此限制及代码依据见续签契约；未修改全局 session lifetime，也未重启网关来强制清理其它服务会话。
+
 实际登记仍为原 sysmcp-t100，query／account 的 namespace、private endpoint、Key 及业务许可保持。没有创建替代服务、修改产品数据库或复制业务秘密进 GOV。契约、无条件更新的并发限制及停用方式见 [续签说明](docs/connector-renewal.md)。
 
 ## 离线、构建与审查
@@ -47,7 +49,11 @@
 
 ## Git 与远端证据
 
-origin 为现有 `zs001122/sysmcp_dev`，原 main 初始提交 `667f8bf` 的 [首次 CI](https://github.com/zs001122/sysmcp_dev/actions/runs/39552844241) 已成功。该结果不代替本次运维变更的提交级检查。本轮在 `codex/t100-v092-deployment-20261021` 分支交付，PR 和新 CI 结果在实际产生后补充；不自动合并。
+origin 为现有 `zs001122/sysmcp_dev`，原 main 初始提交 `667f8bf` 的 [首次 CI](https://github.com/zs001122/sysmcp_dev/actions/runs/39552844241) 已成功。该结果不代替本次运维变更的提交级检查。本轮实现提交 `e2ea075a70cdecb142b114e4bef747654e4a6a56` 已推送至 `codex/t100-v092-deployment-20261021`，建立 [PR #1](https://github.com/zs001122/sysmcp_dev/pull/1)；本地独立审查无阻塞发现，正式合并评审和分支保护仍分别待办，不自动合并。后续文档收尾提交的自动检查以 [PR 当前检查](https://github.com/zs001122/sysmcp_dev/pull/1/checks) 为准，不把先前提交结果套用到后续变更。
+
+实现提交 e2ea075 的 [远端 CI](https://github.com/zs001122/sysmcp_dev/actions/runs/39569822959) 已成功：GOV 29 项、CORE 4 项、BIZ 1940 项全部通过，CORE 重建哈希匹配、制品边界和去敏报告检查通过，制品已作为该次 CI 产物上传。BIZ 远端用时 126.34 秒；不覆盖当前部署制品。
+
+提交前核验 233 个公开文件，未发现私有路径、私钥、完整 JWT 或已知真实员工资料；438 个受影响本地文档链接均有效，三份 systemd 模板校验通过。
 
 ## 仍未验收
 

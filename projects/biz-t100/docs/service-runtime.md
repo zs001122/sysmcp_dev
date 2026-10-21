@@ -86,9 +86,11 @@ systemctl --user start sysmcp-biz-t100.service
 systemctl --user status sysmcp-biz-t100.service --no-pager
 ```
 
-需要停止时执行：
+计划停机时先停止连接续签 timer，并等待两个签发／同步单元结束，再停止 BIZ；否则下一轮定时任务会通过依赖重新启动 BIZ。具体维护检查见 [GOV 续签说明](../../gov/docs/connector-renewal.md#维护检查)。
 
 ```bash
+systemctl --user stop sysmcp-t100-gateway-sync.timer
+# 确认签发和同步单元均已结束后：
 systemctl --user stop sysmcp-biz-t100.service
 ```
 
@@ -141,6 +143,8 @@ MetaMCP 2.4.22 不透传外部调用者的 JWT。两个 namespace 共用受控�
 账号网关仍为临时内部连接，不代表外部员工。接口 ACK 后通过账号资料或实际登录验证效果，不能使用员工查询的 `status`。此前 0.9.1 接入的实际验证与是否派发业务请求记入 [0.9.1 验证记录](../VALIDATION-v0.9.1.md)，不以发现工具或拒绝测试签收业务写入效果。
 
 ## 短期连接令牌维护
+
+自动续签覆盖网关登记及后续新建会话。MetaMCP 2.4.22 的已建立长会话不能热切换 JWT；当前 live.py 每次新建会话，持久客户端需在请求结束后关闭旧会话再连接，不能自动重发业务写入。详见 [GOV 兼容边界](../../gov/docs/connector-renewal.md#验证与兼容)。
 
 日常 `live.py` 调用自动产生最多五分钟的客户端令牌。MetaMCP 的单一 `sysmcp-t100` server 使用一个下游连接令牌，默认且最多有效一小时；两个 namespace 共用一次续签。2026-10-21 已新增两段独立运维单元：BIZ `sysmcp-t100-gateway-token.service` 调用既有 CLI，把受控主体令牌发布至 `.runtime/exports/metamcp-connector.jwt`；GOV `sysmcp-t100-gateway-sync.service` 只读取这一交接 JWT，通过受支持管理 API 更新原 server 的 Bearer token，并回读核验其它字段不变。`sysmcp-t100-gateway-sync.timer` 已 enabled／active，启用约一分钟后首次触发，随后每 20 分钟调度并保留 Persistent。手动首轮和定时自动轮均同步成功且令牌摘要不同；最近结果以 [GOV 续签说明](../../gov/docs/connector-renewal.md) 和 [运维验证](../../gov/VALIDATION-operations-20261021.md) 为准。早期手动令牌到期时间只属于原部署记录，不能作为当前有效期。
 
